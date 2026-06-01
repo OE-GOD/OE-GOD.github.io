@@ -1,21 +1,15 @@
 title: Aung Maw
-description: AI safety / mechanistic interpretability research. Solo work on SAE causal evaluation, currently looking for collaboration and MATS-style programs.
+description: Mechanistic interpretability and AI safety research. Solo work on causal evaluation of sparse autoencoder features. Currently looking for MATS, Apollo, FAR.AI collaborations.
 url: "https://oe-god.github.io"
 
 author:
   name: Aung Maw
   email: irving46764@gmail.com
 
-theme: jekyll-theme-minimal
-
 markdown: kramdown
 highlighter: rouge
 
 permalink: /:year/:month/:day/:title/
-
-show_downloads: false
-
-google_analytics:
 
 include:
   - _posts

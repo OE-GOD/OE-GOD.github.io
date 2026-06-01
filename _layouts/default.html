@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/post.css' | relative_url }}">
+</head>
+<body>
+  <header class="post-header">
+    <a href="{{ '/' | relative_url }}" class="back-link">← {{ site.author.name }}</a>
+  </header>
+  <article class="post">
+    {{ content }}
+  </article>
+</body>
+</html>

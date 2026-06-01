@@ -1,0 +1,80 @@
+---
+layout: home
+---
+
+<div class="hero">
+  <h1>Aung Maw</h1>
+  <p class="tagline">Mechanistic interpretability · AI safety research</p>
+
+  <p class="seeking"><strong>Currently looking for:</strong> MATS, Apollo Research, FAR.AI, or equivalent mech-interp programs / collaborations.</p>
+
+  <nav class="links">
+    <a href="https://github.com/OE-GOD" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/aung-maw-b79669309/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:irving46764@gmail.com">irving46764@gmail.com</a>
+  </nav>
+</div>
+
+<section>
+  <h2>Now</h2>
+  <ul class="now-list">
+    <li>Causal evaluation of sparse autoencoder features in small open transformers</li>
+    <li>Per-head path patching applied to SAE features (extending IOI-style methodology)</li>
+    <li>Property-based testing for ML systems (SRSE 2026, advised by Marcelo d'Amorim)</li>
+    <li>Self-studying the mech-interp canon — Math Framework, IOI, Sparse Feature Circuits</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Selected work</h2>
+
+  <article class="project-card">
+    <h3 class="project-title">
+      <a href="/2026/06/01/sae-pythia-160m/">Auto-interp Labels Conflate Driver and Thermometer SAE Features</a>
+    </h3>
+    <div class="project-date">June 2026</div>
+
+    <p class="project-summary">
+      A seventeen-experiment characterization of TopK SAE features in Pythia-160M layer 6. The driver/thermometer split between features auto-interp labels as "monosemantic" is a categorical property robust across intervention method and magnitude. Among features that pass sufficiency tests, only one third are true drivers when also tested for necessity.
+    </p>
+
+    <div class="project-findings">
+      <strong>Three headline findings</strong>
+      <ol>
+        <li>14 of 23 "monosemantic" features show zero drift toward their labeled concept when steered. Most are thermometers, not drivers.</li>
+        <li>2×2 necessity × sufficiency drops the TRUE driver rate from 56% to 33%. Single-direction patching miscategorizes ~40% of features.</li>
+        <li>Same-labeled drivers route through different downstream attention heads. Causally validated via steering+ablation: mediator effects 30–44× larger than random-head ablation.</li>
+      </ol>
+    </div>
+
+    <div class="project-meta">
+      Solo work · $50 compute on a MacBook · full reproducible pipeline · paper retracts one of its own subsidiary claims under validation
+    </div>
+
+    <div class="project-links">
+      <a href="/2026/06/01/sae-pythia-160m/">→ Blog post</a>
+      <a href="https://github.com/OE-GOD/sae-pythia-160m/blob/main/writeup/sae_pythia_layer6_paper.pdf" target="_blank" rel="noopener">PDF paper</a>
+      <a href="https://github.com/OE-GOD/sae-pythia-160m" target="_blank" rel="noopener">GitHub repo</a>
+    </div>
+  </article>
+</section>
+
+<section>
+  <h2>Thinking about</h2>
+  <ul class="now-list">
+    <li>How to scale per-head path patching of SAE features from Pythia-160M to Gemma 2 / Llama 3</li>
+    <li>Whether the 2×2 necessity × sufficiency framework generalizes to crosscoder SAEs (multi-layer features)</li>
+    <li>Why same-labeled SAE features route through different downstream attention heads — geometry, training-data heterogeneity, or something else</li>
+    <li>The "breaking the model" false positive in normalized-metric activation patching, and when it shows up unannounced</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Contact</h2>
+  <div class="contact-block">
+    <p>Feedback, collaboration, and cold emails all welcome — especially on whether these findings reproduce in larger SAEs.</p>
+    <p>Email: <a href="mailto:irving46764@gmail.com">irving46764@gmail.com</a></p>
+    <p>LinkedIn: <a href="https://www.linkedin.com/in/aung-maw-b79669309/" target="_blank" rel="noopener">aung-maw</a></p>
+    <p>GitHub: <a href="https://github.com/OE-GOD" target="_blank" rel="noopener">OE-GOD</a></p>
+  </div>
+</section>

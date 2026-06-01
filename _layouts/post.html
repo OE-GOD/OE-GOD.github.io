@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} · {{ site.title }}</title>
+  <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | truncate: 160 }}">
+  <link rel="stylesheet" href="{{ '/assets/css/post.css' | relative_url }}">
+</head>
+<body>
+  <header class="post-header">
+    <a href="{{ '/' | relative_url }}" class="back-link">← {{ site.author.name }}</a>
+  </header>
+
+  <article class="post">
+    <header class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%B %Y' }}</time>
+    </header>
+
+    {{ content }}
+  </article>
+
+  <footer class="post-footer">
+    <a href="{{ '/' | relative_url }}" class="back-link">← Back to {{ site.author.name }}</a>
+    <p>© {{ 'now' | date: '%Y' }} {{ site.author.name }}</p>
+  </footer>
+</body>
+</html>
