@@ -30,12 +30,41 @@ layout: home
 
   <article class="project-card">
     <h3 class="project-title">
+      <a href="/2026/06/02/atp-degrades-with-depth/">Attribution patching breaks at depth: a layer-adaptive fix</a>
+    </h3>
+    <div class="project-date">June 2026</div>
+
+    <p class="project-summary">
+      Attribution patching (AtP) is the standard cheap approximation to activation patching for SAE circuit discovery. On 180 (feature, head) pairs in Pythia-160M, Pearson(AtP, AP) drops from 0.999 at the first downstream layer to 0.78 at the fifth. A one-line layer-adaptive method — AtP at early layers, AP at the deepest — recovers Pearson 0.99 with full AP at 23% of the compute. Integrated gradients (the Marks et al. 2024 default) is <em>worse</em> than AtP at early layers and only wins at the deepest one.
+    </p>
+
+    <div class="project-findings">
+      <strong>Three results</strong>
+      <ol>
+        <li>AtP degrades monotonically with downstream depth: Pearson with AP drops 0.999 → 0.78 across layers 7 → 11. Individual mediator magnitudes can be off by 14×.</li>
+        <li>Integrated gradients (N=10) is Pareto-dominated by AtP at the overall level (same Pearson, 10× cost) and is <em>worse</em> than AtP at early layers, only winning at the deepest one.</li>
+        <li>Layer-adaptive patching (AtP for L&lt;11, AP for L=11) achieves Pearson 0.992 with full AP at 23% of full-AP compute — a 5× speedup at &lt;1% accuracy loss.</li>
+      </ol>
+    </div>
+
+    <div class="project-meta">
+      Methodological contribution · all four methods benchmarked on the same 180 pairs · solo work, $50 MacBook compute
+    </div>
+
+    <div class="project-links">
+      <a href="/2026/06/02/atp-degrades-with-depth/">→ Blog post</a>
+      <a href="https://github.com/OE-GOD/sae-pythia-160m" target="_blank" rel="noopener">GitHub repo</a>
+    </div>
+  </article>
+
+  <article class="project-card">
+    <h3 class="project-title">
       <a href="/2026/06/01/sae-pythia-160m/">Auto-interp Labels Conflate Driver and Thermometer SAE Features</a>
     </h3>
     <div class="project-date">June 2026</div>
 
     <p class="project-summary">
-      A seventeen-experiment characterization of TopK SAE features in Pythia-160M layer 6. The driver/thermometer split between features auto-interp labels as "monosemantic" is a categorical property robust across intervention method and magnitude. Among features that pass sufficiency tests, only one third are true drivers when also tested for necessity.
+      A nineteen-experiment characterization of TopK SAE features in Pythia-160M layer 6. The driver/thermometer split between features auto-interp labels as "monosemantic" is a categorical property robust across intervention method and magnitude. Among features that pass sufficiency tests, only one third are true drivers when also tested for necessity.
     </p>
 
     <div class="project-findings">
