@@ -215,6 +215,60 @@ section h2 {
   border-bottom-color: var(--accent);
 }
 
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-item {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-item:first-child {
+  padding-top: 4px;
+}
+
+.post-item:last-child {
+  border-bottom: none;
+}
+
+.post-link {
+  display: inline;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.post-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.post-date {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-excerpt {
+  font-size: 15px;
+  color: var(--text);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+
+.post-excerpt em {
+  font-style: italic;
+}
+
 .contact-block {
   background: var(--card-bg);
   border: 1px solid var(--border);
