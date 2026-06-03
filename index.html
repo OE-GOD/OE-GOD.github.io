@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/03/efficient-atp-star-softmax/">Efficient AtP*: 30× speedup for SAE circuit discovery</a>
+      <span class="post-date">June 3, 2026</span>
+      <p class="post-excerpt">Built the diagnostic to find <em>why</em> attribution patching fails at deep layers in Pythia-160M. The answer: attention softmax saturation, exclusively (GELU and LayerNorm aren't responsible). Then built the fix — closed-form softmax-aware AtP — which achieves Pearson 0.993 with full activation patching at 2 model passes per feature-position. Same cost as plain AtP, 5× lower error, 30× speedup over AP.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/02/atp-degrades-with-depth/">Attribution patching breaks at depth: a layer-adaptive fix</a>
       <span class="post-date">June 2, 2026</span>
       <p class="post-excerpt">Attribution patching is the standard cheap approximation for SAE circuit discovery. On 180 (feature, head) pairs in Pythia-160M, its agreement with activation patching drops from Pearson 0.999 at the first downstream layer to 0.78 at the fifth. Integrated gradients (the Marks et al. 2024 default) is <em>worse</em> than AtP at early layers. A one-line layer-adaptive method recovers Pearson 0.99 with full AP at 23% of the compute — a 5× speedup.</p>
