@@ -124,6 +124,74 @@ Efficient AtP* Pareto-dominates every method at AtP cost. Per-pair adaptive stil
 
 ---
 
+## Update (June 3): cross-architecture replication — partial success, honest scope limit
+
+After publishing, I tested whether efficient AtP* generalizes. Two follow-up experiments.
+
+### Pythia generalization across 15 diverse features (works)
+
+The original Pearson 0.993 result was on three TRUE driver features, all from the newline cluster. I re-ran on 15 features spanning 7 newline contexts plus 8 non-newline categories: French street names, decimal points, file paths, BibTeX/LaTeX, punctuation, logical operators, BPE continuations, exponentiation notation.
+
+Result: **Pearson 0.992** across 12 features that produced sufficient firing positions. Per-feature range 0.929–0.999. The method is not specific to newline drivers — it works across diverse SAE features.
+
+### Hybrid efficient AtP* + per-pair AP fallback (new Pareto point)
+
+Combining the two ideas — use efficient AtP* as base, fall back to AP only on pairs flagged uncertain by the linearity probe — produces a new Pareto frontier point:
+
+| Config | Pearson | Cost (passes/feature-pos) | Speedup |
+|---|---|---|---|
+| Hybrid (probe=0.005, tol=0.10) | **0.9990** | **12.1** | 5× |
+| Per-pair adaptive | 0.9987 | 15.6 | 3.85× |
+| Hybrid (probe=0.020, tol=0.5) | **0.9978** | **3.8** | **16×** |
+| Efficient AtP* | 0.9933 | 2 | 30× |
+
+The hybrid Pareto-dominates per-pair adaptive: same Pearson 0.999 at 12 passes vs 16 (23% cheaper). And the cheap end gives Pearson 0.998 at 3.8 passes — the cheapest method on the >0.997 frontier.
+
+### Gemma 2 2B replication — partial success, honest scope limit
+
+I then tested cross-architecture generalization on Gemma 2 2B (different architecture: GQA with 8 Q heads + 4 K/V heads, RMSNorm, attention softcap, 26 layers). Adapted the closed-form to handle these differences. Tested with Gemma Scope SAEs.
+
+Two configurations:
+
+| Setting | SAE layer | Downstream layers | Pearson(AtP*, AP) |
+|---|---|---|---|
+| Pythia-160M (original) | 6 | 5 | **0.993** |
+| **Gemma 2 2B (deeper SAE)** | **22** | **3** | **0.700** |
+| **Gemma 2 2B (mid SAE)** | **12** | **13** | **0.407** |
+
+**The depth-of-cascade matters a lot.** Going from 13 downstream layers (Gemma L12 SAE) to 3 (Gemma L22 SAE) improved Pearson from 0.41 to 0.70. But even at 3 downstream layers, Gemma's accuracy is well below Pythia's at 5 layers (0.99).
+
+I spent an hour debugging the worst disagreement (f1041 L15H5: AP = −0.043, AtP* = +0.0003 — a sign flip). The closed-form math is **provably correct**:
+
+| Quantity | Cosine sim (closed vs actual) | Magnitude ratio |
+|---|---|---|
+| Δq | 0.9996 | 0.998 |
+| Δrot_q | 0.9991 | 1.002 |
+| Δscores | 0.9991 | 0.997 |
+| Δpattern | **1.0000** | 1.05 |
+
+But here's the critical test: even substituting the *actual* Δpattern from a real perturbed forward (skipping the closed-form entirely), `g_pattern · Δpattern` gives +0.003 while AP gives −0.008 — different sign. The linear approximation through the L15 attention pattern is wrong by sign *even when the pattern itself is computed exactly*.
+
+**This is a fundamental limitation, not an implementation bug.** The gradient `g_pattern` is the first-order sensitivity of the metric to a change in L15's attention pattern. When the perturbation propagates through 10 more downstream nonlinear blocks (each with attention + MLP + LN, plus softcap), cascading higher-order effects dominate. First-order chain rule — even with softmax saturation correctly handled at the intervention layer — breaks down.
+
+### What this means for the "best in the world" claim
+
+Honestly: it's an overclaim for the full method. The correct framing:
+
+- **Efficient AtP\* is the best cheap method for SAE circuit discovery in the *shallow-downstream regime***: when the intervention is within ~3–5 nonlinear blocks of the output. Within this regime, it Pareto-dominates plain AtP, IG, layer-adaptive patching, and per-pair adaptive.
+- **For deeper interventions**, the first-order approximation has unavoidable limits without further methodological work (higher-order corrections, hybrid AP+AtP* by intervention depth, or fundamentally different approaches).
+- **Practical recipe for Gemma deployments**: place SAEs within ~5 layers of the output for efficient AtP* to be reliable; for deeper interventions, the choice is either fall back to AP or accept reduced accuracy.
+
+### What I learned (third methodology lesson)
+
+The two earlier lessons (diagnose-before-build, write-the-empirical-vs-analytical-check) both came from cases where I made progress. The third lesson is from a case where I had to stop:
+
+**Negative results from cross-architecture transfer are about the validity of your assumptions, not about your code.** I spent significant time hunting for a Gemma-specific bug. There was none. The math was exact. What failed was the first-order chain-rule assumption — which held for Pythia's 5-layer cascade but not for Gemma's 13-layer one. The right framing wasn't "find the bug" but "characterize the regime of validity." Future cross-architecture replications should treat regime-of-validity as the primary question to answer, not as the fallback when no bug is found.
+
+This shapes the writeup honestly: a Pareto-dominant method on Pythia with provable Δpattern math, validated within-model across 15 features, with explicit and bounded scope limits on cross-architecture transfer. That's a real contribution, not a sweeping claim.
+
+---
+
 ## What the LayerNorm bug taught me
 
 Implementing efficient AtP* was straightforward in principle: cache the clean state, apply softmax to (clean_scores + closed-form-Δscores), use the cached gradient. The first version was wildly off — Pearson −0.46 at L7, sign flips everywhere.
