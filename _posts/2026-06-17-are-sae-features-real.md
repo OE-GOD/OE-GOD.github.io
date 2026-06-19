@@ -116,6 +116,20 @@ Refined insight: distribution shift hurts in proportion to **token-structure** d
 
 ---
 
+## Where this fits — and what's new vs SAEBench
+
+Most of this overlaps with work the field has already done, and I want to be precise about credit. The reference evaluation suite is **[SAEBench](https://arxiv.org/abs/2503.09532)** (Karvonen et al., ICML 2025) — 8 metrics across reconstruction, concept detection (sparse probing, absorption), interpretability (auto-interp), and disentanglement (RAVEL, SCR, TPP, unlearning). My detector-validation is essentially its **sparse-probing** eval; my "hate detector learned topic, not hate" is its **SCR** (spurious-correlation) setting; my replication finding is **[Paulo & Belrose (2025)](https://arxiv.org/abs/2501.16615)**, who showed only ~30% of features survive a seed change on Llama. I reinvented a lot of this independently — which I take as a sign the instincts are right, not as novelty.
+
+So what's actually new here is narrow and specific. SAEBench evaluates SAEs **in-distribution and single-seed**. Two things it does not test:
+
+1. **Cross-distribution validation.** A detector can pass in-distribution sparse-probing yet collapse out-of-distribution — `digit` went 0.84 → 0.00, `upper` went 0.84 → 0.24 on a new corpus. In-distribution success can be a spurious shortcut; **cross-distribution generalization is what separates real feature signal from a dataset-specific trick.** This is a necessary check the benchmark omits.
+
+2. **The no-oracle framing.** Because there is no ground-truth list of "real features," you cannot certify individual features with precision guarantees on real models (I show this empirically: injected ground truth makes precision unmeasurable). The honest response is to validate *detectors* against a task — where the labels are the oracle — rather than features against nothing.
+
+Honest calibration: the cross-distribution effect is **concept-dependent** — rare for surface concepts (1 of 7 token-level detectors failed cross-distribution), more common for semantic ones. So the claim is *"cross-distribution validation catches spurious detectors that in-distribution evaluation misses, especially for semantic concepts"* — not "in-distribution evals are worthless." It's a necessary addition to SAEBench's axes, not a replacement.
+
+---
+
 ## Conclusion
 
 > **Individual SAE features mostly aren't real — but the model's concepts are. They live in combinations of features, not single units. So don't certify features; build, validate, and deploy feature-based detectors — judged by held-out and cross-distribution task performance, documented with their scope and failure modes.**
@@ -125,6 +139,6 @@ This turns an unanswerable ontological question ("are features real?") into an a
 ## Honest limitations
 
 - Toy/simple concepts (newline, digit, space). High-stakes concepts (toxicity, PII) are harder and need their own labeled tasks — but the *method* is identical.
-- One SAE, one layer; cross-distribution tested on one OOD corpus.
+- One SAE, one layer; cross-distribution tested on two OOD corpora (TinyStories, wikitext).
 - This certifies a *detector's* reliability, not that its constituent features are individually "real" — a deliberately weaker, honest claim.
 - The no-oracle wall is fundamental, not an engineering gap: native-feature realness cannot be certified with precision guarantees on real models.
