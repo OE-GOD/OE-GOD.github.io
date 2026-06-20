@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/17/are-sae-features-real/">Are SAE features real? Stop certifying features, validate detectors</a>
+      <span class="post-date">June 17, 2026</span>
+      <p class="post-excerpt">Individual SAE features mostly can't be certified "real" — only ~1–2% replicate across seeds, and "realness" splits into independent axes (stability, causation, interpretability) that disagree. The trustworthy unit is a <em>validated detector</em>: a sparse feature combination judged by held-out <em>and cross-distribution</em> task performance. A recipe search (L1-select + MLP) reaches ~0.98 cross-distribution F1 on surface concepts on a real Gemma Scope SAE; semantic concepts improve to ~0.82 but aren't cleanly robust. Positions the work against SAEBench and Paulo &amp; Belrose.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/03/efficient-atp-star-softmax/">Efficient AtP*: 30× speedup for SAE circuit discovery</a>
       <span class="post-date">June 3, 2026</span>
       <p class="post-excerpt">Built the diagnostic to find <em>why</em> attribution patching fails at deep layers in Pythia-160M. The answer: attention softmax saturation, exclusively (GELU and LayerNorm aren't responsible). Then built the fix — closed-form softmax-aware AtP — which achieves Pearson 0.993 with full activation patching at 2 model passes per feature-position. Same cost as plain AtP, 5× lower error, 30× speedup over AP.</p>
