@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/20/detect-and-steer-frontier/">Detecting and steering SAE features: where it works, where it breaks</a>
+      <span class="post-date">June 20, 2026</span>
+      <p class="post-excerpt">A 60-agent search for the best cross-distribution detector recipe (L1-select + MLP; the optimal feature count scales with SAE width — 100 on a 2k SAE, 400 on Gemma Scope's 16k), then steering along the same feature directions. One pattern falls out of both: surface properties (newline, sentiment) are detectable <em>and</em> steerable; semantic/safety properties (hate, toxicity) sit at the frontier — and toxicity steering exposes a metric-vs-behavior gap, where an independent scalar improves but the generated text doesn't. Includes the circularity check that separates real control from artifact.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/17/are-sae-features-real/">Are SAE features real? Stop certifying features, validate detectors</a>
       <span class="post-date">June 17, 2026</span>
       <p class="post-excerpt">Individual SAE features mostly can't be certified "real" — only ~1–2% replicate across seeds, and "realness" splits into independent axes (stability, causation, interpretability) that disagree. The trustworthy unit is a <em>validated detector</em>: a sparse feature combination judged by held-out <em>and cross-distribution</em> task performance. A recipe search (L1-select + MLP) reaches ~0.98 cross-distribution F1 on surface concepts on a real Gemma Scope SAE; semantic concepts improve to ~0.82 but aren't cleanly robust. Positions the work against SAEBench and Paulo &amp; Belrose.</p>
