@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/20/despurious-cross-distribution/">Removing spurious features makes a semantic detector generalize</a>
+      <span class="post-date">June 20, 2026</span>
+      <p class="post-excerpt">Semantic detectors built from SAE features don't transfer across distributions — a sentiment probe trained on movie reviews scores 0.66 on product reviews because it partly learns domain vocabulary, not sentiment. The fix: identify the features that encode the <em>domain</em> rather than the <em>concept</em> and drop them. Cross-distribution F1 rises to 0.74, in-distribution preserved, beating random removal by ~9σ — and it passed a leakage audit (a deliberately-leaky control scored worse) and independent reproduction. The first clearly positive, verified result in the "are interpretability signals trustworthy?" arc, and a place SAE features genuinely beat raw probes.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/20/detect-and-steer-frontier/">Detecting and steering SAE features: where it works, where it breaks</a>
       <span class="post-date">June 20, 2026</span>
       <p class="post-excerpt">A 60-agent search for the best cross-distribution detector recipe (L1-select + MLP; the optimal feature count scales with SAE width — 100 on a 2k SAE, 400 on Gemma Scope's 16k), then steering along feature directions. The detector finding holds: surface properties are far more tractable than semantic/safety ones. Includes a retraction — a "causal direction beats probe direction for detox" result I first published fell apart under rigorous measurement (real classifiers, 288 sampled generations). The rerun caught my own weak-metric artifact, which is exactly the standard this project holds the field to.</p>
