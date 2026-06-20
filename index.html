@@ -66,7 +66,7 @@ layout: home
     <li class="post-item">
       <a class="post-link" href="/2026/06/20/detect-and-steer-frontier/">Detecting and steering SAE features: where it works, where it breaks</a>
       <span class="post-date">June 20, 2026</span>
-      <p class="post-excerpt">A 60-agent search for the best cross-distribution detector recipe (L1-select + MLP; the optimal feature count scales with SAE width — 100 on a 2k SAE, 400 on Gemma Scope's 16k), then steering along the same feature directions. One pattern falls out of both: surface properties (newline, sentiment) are detectable <em>and</em> steerable; semantic/safety properties (hate, toxicity) sit at the frontier — and toxicity steering exposes a metric-vs-behavior gap, where an independent scalar improves but the generated text doesn't. Includes the circularity check that separates real control from artifact.</p>
+      <p class="post-excerpt">A 60-agent search for the best cross-distribution detector recipe (L1-select + MLP; the optimal feature count scales with SAE width — 100 on a 2k SAE, 400 on Gemma Scope's 16k), then steering along feature directions. Two findings: surface properties (newline, sentiment) are far more tractable than semantic/safety ones in both detection and steering; and steering a safety target (toxicity) only works from the <em>causal</em> difference-of-means direction, not the probe's <em>detection</em> direction — detect ≠ cause, shown by a failure and its fix ("the most annoying thing ever" → "the best"). With the circularity check that separates real control from artifact.</p>
     </li>
 
     <li class="post-item">

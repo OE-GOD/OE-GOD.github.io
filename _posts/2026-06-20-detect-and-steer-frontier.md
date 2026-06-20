@@ -6,7 +6,7 @@ date: 2026-06-20
 
 # Detecting and steering SAE features: where it works, where it breaks
 
-*Follow-up to [Are SAE features real?](/2026/06/17/are-sae-features-real/). If you can't certify individual features, you validate detectors built from them — and you can also steer behavior along them. I ran a large recipe search for the best cross-distribution detectors, then tested whether the same feature directions can steer behavior. One clean pattern fell out of both: surface properties are tractable; semantic and safety-relevant properties sit at the frontier. The same line shows up in detection AND steering.*
+*Follow-up to [Are SAE features real?](/2026/06/17/are-sae-features-real/). If you can't certify individual features, you validate detectors built from them — and you can steer behavior along them. I ran a large recipe search for the best cross-distribution detectors, then tested steering. Two findings: surface properties are far more tractable than semantic/safety ones (in both detection and steering); and steering a safety target only works when you use the **causal** direction, not the probe's **detection** direction — detect ≠ cause, demonstrated by a failure and its fix.*
 
 *June 2026 · [Code](https://github.com/OE-GOD/sae-feature-realness) · Gemma-2-2b + Gemma Scope SAEs · every number from a reproducible script, several verified by an independent re-run*
 
@@ -51,31 +51,42 @@ I built a sentiment probe on Gemma's own SAE features, turned it into a residual
 
 **Crucially, I checked for circularity.** Building the steering direction from the probe's own features means a probe-based metric would rise *by construction*, even if behavior never changed. So I measured with a **probe-independent** signal — the logit gap between positive and negative *words* — and it moved monotonically too, and the generated *text* visibly flipped. The control is real, not an artifact of measuring my own injected signal.
 
-## Part 3 — The safety-relevant target, where it breaks
+## Part 3 — The safety target: a failure, a diagnosis, and a fix
 
-Sentiment is easy and not very useful. The target that matters is something genuinely *better* — so I tried steering **away from toxicity** (defensive direction only). Result:
+Sentiment is easy and not very useful. The target that matters is something genuinely *better* — so I tried steering **away from toxicity** (defensive direction only).
+
+**First attempt — using the toxicity probe's direction — failed in an instructive way.** The probe-independent metric (polite-vs-rude word logits) rose monotonically on every prompt, but the generated text did **not** de-escalate — it stayed hostile even at maximum steering. The number moved; the behavior didn't. That's the **metric-vs-behavior gap**: an independent *scalar* can improve while the actual *output* doesn't.
+
+**The diagnosis is detect ≠ cause.** A probe finds the direction that *predicts* toxicity — a correlational direction. Steering needs the direction that *causes* it. They aren't the same (the same driver-vs-thermometer split from the [first post](/2026/06/17/are-sae-features-real/)). Steering along a detection direction nudges the logits but doesn't flip the token the model actually generates.
+
+**The fix: use the causal direction.** I switched to contrastive activation addition (CAA) — the difference-of-means vector (mean toxic activation − mean clean activation) — applied at five layers. This actually changes behavior, and stays coherent:
 
 ```
 "Honestly that group of people is"
-  baseline      polite-gap -9.9   "the most annoying thing ever"
-  safer (-20)   polite-gap -6.3   "the most annoying group of people I have ever met"
-  safer (-36)   polite-gap -2.75  "the most annoying group of people to be around"
+  baseline     rude=1   "the most annoying thing ever"
+  detox        rude=0   "the best. I've been in the same group for 2 years and we're all"
+
+"The comment section was full of"
+  baseline     rude=0   "people who were not happy with the decision"
+  detox        rude=0   "people who were happy to see the couple back together"
 ```
 
-The probe-independent metric (polite-vs-rude word logits) rose monotonically on every prompt. **But the generated text did not de-escalate** — it stayed hostile even at maximum steering. The number moved; the behavior didn't.
+"The most annoying thing ever" becomes "the best" — a genuine behavioral flip, fluent (not the over-steered garbage that "succeeds" by breaking the model). The failure and the fix together are the point: **the probe direction couldn't steer behavior; the causal difference-of-means direction could.** Detect ≠ cause, demonstrated in the steering setting.
 
-This is the **metric-vs-behavior gap**: an independent *scalar* can improve while the actual *output* doesn't. Moving a number is not the same as changing what the model does. Toxicity reduction via this simple SAE-feature steering does not work, even though sentiment steering did.
+Honest scope: CAA is a known technique ([Rimsky et al.](https://arxiv.org/abs/2312.06681)), and the diff-of-means vector lives in the raw residual stream — so this is *causal-direction steering works where probe-direction steering didn't*, not "SAE features detoxify." Greedy decoding, base model, three prompts, a crude rude-word metric; the clearest flip is the first prompt. A robust claim needs sampling, more prompts, and a real toxicity classifier.
 
 ## The pattern (the actual finding)
 
-The same line shows up in both detection and steering:
+Two threads run through all of this:
+
+**(1) Surface properties are far more tractable than semantic/safety ones.**
 
 | property type | detect cross-distribution? | steer behavior? |
 |---|---|---|
-| surface (newline, sentiment) | yes (~0.98) | yes (text flips) |
-| semantic / safety (hate, toxicity) | weak (~0.78, label-limited) | metric moves, behavior doesn't |
+| surface (newline, sentiment) | yes (~0.98) | yes, even from the probe direction |
+| semantic / safety (hate, toxicity) | weak (~0.78, label-limited) | only from the *causal* direction (CAA), not the probe |
 
-**Surface properties are controllable from SAE features; semantic and safety-relevant properties sit at the frontier — and they resist in the same way whether you're detecting or steering.** That consistency across two unrelated methods is the result. It suggests the limit isn't the method (probe vs steering) but something about how these properties are represented.
+**(2) For the hard targets, detect ≠ cause is the deciding factor.** Surface properties are forgiving — even a correlational probe direction steers them. Safety properties are not: the probe direction moves the metric but not the behavior, and only the causal difference-of-means direction actually changes the output. The harder the property, the more the gap between *detecting* it and *causing* it matters — the same principle that governs which individual features are "real." It suggests the limit isn't the method (probe vs steering) but how cleanly a property's *causal* direction can be recovered.
 
 ## Honest scope
 
@@ -86,6 +97,6 @@ The same line shows up in both detection and steering:
 
 ## Where this points
 
-The real frontier — making semantic/safety properties both *detectable* and *steerable* cross-distribution — is open. The likely levers (better-calibrated probes, layer selection, contrastive or training-time signals rather than inference-time steering) are exactly the interpretability-as-control direction that turns "a model improving itself via self-interpretation" from a slogan into a research program. That's where I'm headed next.
+The real frontier — making semantic/safety properties both *detectable* and *steerable* cross-distribution — is open. The detect ≠ cause result narrows it usefully: for hard targets, the lever is recovering the *causal* direction (contrastive / difference-of-means, multi-layer), not better detection. The next steps — cleaner causal directions, layer selection, training-time rather than inference-time signals, and a real toxicity classifier instead of a word count — are exactly the interpretability-as-control direction that turns "a model improving itself via self-interpretation" from a slogan into a research program. That's where I'm headed next.
 
 *Code and all scripts: [github.com/OE-GOD/sae-feature-realness](https://github.com/OE-GOD/sae-feature-realness).*
