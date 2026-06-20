@@ -8,7 +8,7 @@ date: 2026-06-17
 
 *I tried to answer "are sparse-autoencoder features real?" and found the question, as usually asked, is unanswerable — there's no oracle for which features are real, and when you test it, most individual features fail. But the useful version is answerable: you can build, validate, and deploy feature-based **detectors**, certified by held-out and cross-distribution task performance. This post walks the whole arc — from the no-oracle wall to a deployed detector that scores perfect precision on unseen prose and fails safe on code.*
 
-*June 2026 · [Code + figures](https://github.com/OE-GOD) · built from scratch by hand, every number from a reproducible script*
+*June 2026 · [Code + figures](https://github.com/OE-GOD/sae-feature-realness) · built from scratch by hand, every number from a reproducible script*
 
 ---
 
