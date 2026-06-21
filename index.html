@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/21/interpretability-beats-confidence/">When interpretability beats confidence: distrust the answer your trustworthy self rejects</a>
+      <span class="post-date">June 21, 2026</span>
+      <p class="post-excerpt">The capstone ended on a catch — a detector could tell when it was wrong OOD, but plain confidence did the work and the interpretability signal failed. This is the sharpened version that flips it: distrust a prediction when the full detector disagrees with the version of itself that uses only its trustworthy (transfer-stable) features. It beats plain confidence at knowing-when-wrong on all six conditions (3 domains × 2 poolings, paired P≈1.0) — and a control (random-feature sub-models, which only tie confidence) proves the interpretability is load-bearing. The first verified case in the program where an interpretability-native method beats the simple baseline.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/21/trustworthy-by-abstention/">Trustworthy not by being right, but by knowing when it's wrong</a>
       <span class="post-date">June 21, 2026</span>
       <p class="post-excerpt">Capstone. Every attempt to make an SAE-feature detector more <em>accurate</em> out-of-distribution failed (de-spuriousing, a generalization predictor, sign-stability, multi-domain training — eleven methods, no reliable win). So I reframed: a trustworthy detector isn't one that's always right, it's one that knows when it's wrong and abstains. That works — abstaining on the least-confident half raises OOD accuracy ~0.73→0.83 across three held-out domains, verified vs random abstention. Honest catch: the working signal is plain classifier confidence (selective prediction), not the interpretability-native one I hoped for, which failed at chance.</p>
