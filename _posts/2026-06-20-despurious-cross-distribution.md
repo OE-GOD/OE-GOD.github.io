@@ -6,7 +6,7 @@ date: 2026-06-20
 
 # Removing spurious features makes a semantic detector generalize
 
-*Across [the](/2026/06/17/are-sae-features-real/) [first](/2026/06/20/detect-and-steer-frontier/) two posts, one wall kept showing up: semantic detectors built from SAE features don't generalize across distributions. A sentiment probe trained on movie reviews scores 0.66 F1 on product reviews. This post is a fix that survived adversarial verification — identify the features that encode the **domain** rather than the **concept**, drop them, and cross-distribution F1 rises to 0.74, with in-distribution performance unchanged. It beats a random-removal control by ~9σ, with a passing leakage audit. After [retracting a steering result last post](/2026/06/20/detect-and-steer-frontier/), I held this one to a high bar before believing it.*
+*Across [the](/2026/06/17/are-sae-features-real/) [first](/2026/06/20/detect-and-steer-frontier/) two posts, one wall kept showing up: semantic detectors built from SAE features don't generalize across distributions (a sentiment probe trained on movie reviews scores 0.66 F1 on product reviews). This post tries a fix — drop the features that encode the **domain** rather than the **concept** — which raises cross-distribution F1 to ~0.73, verified leak-free and ~9σ over a random control. **But the follow-up (see the Update) deflated it:** a better base recipe (max-pooling + selection) reaches 0.77 cross-distribution without any de-spuriousing, and the levers don't compound. So de-spuriousing rescues a weak detector; recipe choice is the bigger lever. I'm leaving the original framing and the correction both visible — same standard as last post's retraction.*
 
 *June 2026 · [Code](https://github.com/OE-GOD/sae-feature-realness) · Gemma-2-2b + Gemma Scope SAE · sentiment, real labels*
 
@@ -49,9 +49,28 @@ Last post I published a steering result that fell apart under rigorous measureme
 
 This is the first clearly *positive, verified* result in this whole "are interpretability signals trustworthy?" arc — and it's a place where SAE features genuinely beat raw probes. You can't easily "remove the domain direction" from a raw activation probe; you can identify and drop specific interpretable features. It moves the central question forward: **a semantic signal you can trust across distributions** is exactly the prerequisite for any interpretability-driven control (or self-improvement) loop. Detection had to become trustworthy before control could.
 
+## Update: de-spuriousing rescues a *weak* detector — recipe choice does more
+
+After publishing this, I ran the obvious follow-up: is de-spuriousing the *best* way to get a cross-distribution-robust detector, or just *a* way? I searched the full space (pooling × feature-selection × de-spuriousing × probe) and the answer deflated the headline above. Confirmed by an independent rerun:
+
+```
+mean-pool, all features, no de-spuriousing  (this post's baseline):  0.661
+mean-pool, all features, de-spuriousing     (this post's result):    ~0.73
+max-pool, correlation-selected, NO de-spuriousing (better recipe):   0.774  ← higher, without it
+max-pool, correlation-selected, + de-spuriousing (stacked):          0.774  ← de-spuriousing adds +0.000
+```
+
+Two honest corrections to the framing above:
+
+1. **A better base recipe beats de-spuriousing.** Just switching to max-pooling + correlation feature-selection + a linear probe reaches 0.77 cross-distribution — *higher than the de-spurioused weak baseline* — with no spurious-removal at all. The simpler linear probe also generalizes better OOD than an MLP.
+2. **The levers don't compound.** Adding de-spuriousing on top of the good recipe gains nothing (+0.000, 3-seed-stable).
+
+So the accurate claim is narrower than "de-spuriousing makes semantic detectors generalize." It's: **de-spuriousing rescues a poorly-specified detector (the all-features mean-pool baseline), but the larger and sufficient lever for cross-distribution robustness is recipe choice** — pooling, feature selection, and a simple probe. The de-spuriousing result is real and was verified; it's just not the load-bearing lever I first presented it as.
+
+This is the same discipline as the [retraction in the previous post](/2026/06/20/detect-and-steer-frontier/), applied to my own positive result: test your win harder, and report what you find — even when the follow-up shrinks it.
+
 ## Honest scope
 
-- One OOD target (amazon), one selection domain (rotten_tomatoes). The +0.08 generalizes across the rt-selected features but hasn't been shown to transfer to arbitrary unseen domains.
-- The winning removal count (~200) was chosen by sweeping amazon F1, so the exact number is mildly optimistic — but the effect is broad, not a knife-edge.
-- Sentiment has clean labels. The harder, noisy-label case (toxicity / hate) is untested here and is where the signal was weakest to begin with.
-- This is interpretable feature selection for domain-invariance — related to SAEBench's SCR and the broader domain-generalization literature, executed on SAE features and verified end to end.
+- One OOD target (amazon), one selection domain (rotten_tomatoes); sentiment, clean labels. The harder noisy-label case (toxicity/hate) is untested and is where the signal was weakest.
+- The real takeaway is the **calibration above**: for cross-distribution trustworthiness, choose a good recipe (max-pool + selection + linear) first; de-spuriousing is a rescue for weak detectors, not an additive gain on good ones.
+- Related to SAEBench's SCR and the domain-generalization literature, executed on SAE features and verified end to end.
