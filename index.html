@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/21/trustworthy-by-abstention/">Trustworthy not by being right, but by knowing when it's wrong</a>
+      <span class="post-date">June 21, 2026</span>
+      <p class="post-excerpt">Capstone. Every attempt to make an SAE-feature detector more <em>accurate</em> out-of-distribution failed (de-spuriousing, a generalization predictor, sign-stability, multi-domain training — eleven methods, no reliable win). So I reframed: a trustworthy detector isn't one that's always right, it's one that knows when it's wrong and abstains. That works — abstaining on the least-confident half raises OOD accuracy ~0.73→0.83 across three held-out domains, verified vs random abstention. Honest catch: the working signal is plain classifier confidence (selective prediction), not the interpretability-native one I hoped for, which failed at chance.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/20/despurious-cross-distribution/">Removing spurious features makes a semantic detector generalize</a>
       <span class="post-date">June 20, 2026</span>
       <p class="post-excerpt">Semantic detectors built from SAE features don't transfer across distributions — a sentiment probe trained on movie reviews scores 0.66 on product reviews because it partly learns domain vocabulary. Dropping the domain-spurious features raises cross-distribution F1 to ~0.73 (verified leak-free, ~9σ over a random control). But the follow-up deflated the headline: a better base recipe (max-pooling + selection) reaches 0.77 <em>without</em> de-spuriousing, and the levers don't compound — so de-spuriousing rescues a weak detector, while recipe choice is the bigger lever. Both the result and its correction are kept visible, same standard as the prior post's retraction.</p>
