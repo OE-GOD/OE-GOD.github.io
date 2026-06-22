@@ -10,6 +10,8 @@ date: 2026-06-21
 
 *June 2026 · [Code](https://github.com/OE-GOD/sae-feature-realness) · Gemma-2-2b + Gemma Scope SAE · sentiment, real classifier*
 
+*Updated June 2026 — I ran a 59-agent adversarial search to try to beat this signal. A graded version (reliable-code surprisal) wins on ranking, no non-disagreement mechanism beats it, and the fixed-coverage accuracy gain is a coverage artifact. See [the update](#update-june-2026-i-tried-to-beat-this-signal-with-59-agents) at the end.*
+
 ---
 
 ## The idea in one line
@@ -62,3 +64,20 @@ The capstone said: *trustworthy ≠ accurate; you get OOD trust by knowing when 
 > **Interpretability does beat plain confidence at knowing-when-wrong — once you use it to identify trustworthy features and distrust predictions your trustworthy self rejects.** The naive interpretability signal failed; the sharpened one wins, and a control confirms the interpretability is load-bearing.
 
 That turns the whole arc's ending from "selective prediction works, interpretability didn't help" into "interpretability *does* help — here's the signal, and here's the control proving it." It's the first verified case in this program where an interpretability-native method beats the simple baseline it had to dethrone.
+
+---
+
+## Update (June 2026): I tried to beat this signal with 59 agents
+
+After publishing, I ran two large automated searches — 59 agents total — to *attack* the agreement signal: invent and test better trust signals. Twenty-six candidates, every one run on the same real data through one fixed harness, with an independent leakage audit on every winner. Three things came out — one positive, one cautionary, and a third that matters more than both.
+
+**1. A graded version wins on ranking.** The published signal is a single binary switch ("abstain when the full and reliable detectors disagree"). Two *graded* refinements rank correct-vs-wrong predictions strictly better across *all* coverage levels:
+
+- **Reliable-code surprisal** (the new best) — trust a prediction by *how strongly the reliable-feature sub-model believes the full model's chosen label*: concretely, the reliable probe's log-probability of the full probe's predicted class. **AUROC 0.73 → 0.83** (higher in all six conditions), AUGRC better in all six, paired bootstrap **P ≈ 0.99–1.00**.
+- A **bootstrap ensemble** of reliable sub-models (AUROC ~0.81) does nearly as well.
+
+**2. The cautionary caveat — and it's the honest core.** I coverage-matched both against the binary champion. At the binary signal's own operating point, selective accuracy is an **exact tie — 0/6 improvement, Δ = 0.000.** The graded signals don't make the *kept* answers more accurate there; they give a better-*ranked* **dial** — pick any coverage and they separate right from wrong better at it. So any flashy "selective accuracy 0.86–0.94" is a **coverage artifact** (a continuous signal gets scored at ~50% coverage versus the binary one's ~80%). The real, robust win lives only in the coverage-independent metrics (AUROC, AUGRC).
+
+**3. The finding that matters most: nothing *outside* the disagreement family worked.** Across the two searches I tested 40-plus *genuinely different* mechanisms — nearest-neighbour reachability, firing-set similarity to correct exemplars, density / typicality, conformal nonconformity, Bayesian weight uncertainty, causal do-interventions, dynamical-systems basin depth, spectral reconstructability, query-by-committee. **None beat the binary champion. Several fell below chance.** Plain confidence, temperature calibration, density, and attribution-mass all fail too. The load-bearing ingredient is specifically **two-view disagreement** — comparing the model to its *reliable-feature self*. Everything that works refines that; everything that abandons it loses.
+
+**Updated bottom line:** the agreement *mechanism* is right, and surprisingly robust to a hard adversarial search. Grade it with reliable-code surprisal for a better trust *dial*. But the gain is in *ranking*, not fixed-coverage accuracy — and no non-disagreement signal I could invent does better. Scope unchanged: sentiment, one model, three OOD domains × two poolings (n = 6); reproduction in [`verify_surprisal.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/verify_surprisal.py) and [`coverage_matched_check.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/coverage_matched_check.py).
