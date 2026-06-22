@@ -71,6 +71,18 @@ If subtraction doesn't work, what does? I tried two routes.
 
 The improvement over the logistic readout is significant (paired bootstrap P = 1.00 / 0.996), the predictions are class-balanced (not a degenerate one-class trick), and it's identical across threshold choices. On a domain where the model's own answer is a coin flip, **a difference-of-means readout on its stable features recovers the right sentiment 93% of the time.** So the latent answer is not just present — with the right readout it is *substantially* recoverable. The constructive lesson for eliciting latent knowledge under shift: **select transfer-stable features, and read them with a shift-robust estimator (mass-mean), not a logistic probe — and don't try to erase the distractor.** ([`dig_out_knowledge.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/dig_out_knowledge.py), [`verify_massmean.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/verify_massmean.py).)
 
+## Does it generalize to the model's own factual errors? No — and that's the boundary
+
+The sentiment result is about a *probe's* errors. The real prize is the model's **own** errors during generation — hallucination. So I ran it: base Gemma-2-2b few-shot-**judges** ~750 factual True/False claims across five topics (cities, companies, animals, inventions, elements), with natural error rates (65–86% accuracy). When the *model itself* judges a claim wrong, does its internal state still encode the truth — recoverable by the same method (mass-mean on transfer-stable features, trained on held-out topics)?
+
+**It doesn't.** The internal probe is no better than the model's own judgment (e.g. 0.70 vs 0.72), and on the claims the model got wrong it recovers the truth at **~34% — below chance**, no better than random features. The internal state *agrees with the model's wrong answer ~66% of the time.* And it isn't a transfer failure: even *within* a topic, truth is barely linearly decodable for several (animals 0.52, elements 0.57 ≈ chance). For facts, the correct answer largely **isn't there to recover.**
+
+So the latent-knowledge effect is **task-dependent**, and that boundary is the real finding:
+
+> **"The model knows more than it says" held for sentiment but fails for factual recall.** Sentiment has a *transferable concept* (valence) that's robustly represented; out-of-distribution errors come from spurious topic features overriding it, so the answer survives and is recoverable. Factual truth is *per-fact knowledge* with no transferable "truth direction" — when the model errs on a fact, it holds a genuine false belief, and there's nothing to dig out (at this layer).
+
+That matters for safety: it means interpretability can catch a *specific* failure type — **spurious-feature interference with a robust concept** — but not genuine ignorance. It does *not* license "interpretability catches hallucinations" in general. (Caveats: layer 12 + this one SAE; factual knowledge may be more decodable elsewhere in the model; base model, few-shot judging, ~150 claims/topic. [`collect_factual.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/collect_factual.py), [`analyze_factual.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/analyze_factual.py).)
+
 ## Honest scope and caveats
 
 - The rigorous statement is "**the correct answer is linearly decodable from the transfer-stable subspace** on ~62% of the model's OOD errors," not "the model consciously knows." Probing-based latent-knowledge claims carry the standard caveat: decodability is not proof the model *uses* that information downstream.
