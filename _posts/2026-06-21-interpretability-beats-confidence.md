@@ -10,7 +10,7 @@ date: 2026-06-21
 
 *June 2026 · [Code](https://github.com/OE-GOD/sae-feature-realness) · Gemma-2-2b + Gemma Scope SAE · sentiment, real classifier*
 
-*Updated June 2026 — I ran a 59-agent adversarial search to try to beat this signal. A graded version (reliable-code surprisal) wins on ranking, no non-disagreement mechanism beats it, and the fixed-coverage accuracy gain is a coverage artifact. See [the update](#update-june-2026-i-tried-to-beat-this-signal-with-59-agents) at the end.*
+*Updated June 2026 — I ran a 59-agent adversarial search to try to beat this signal (graded reliable-code surprisal wins on ranking), then a self-audit that found real mistakes in my own evaluation. The core claim survives, but the "6/6, P≈1.0" framing was overstated. Read [the update](#update-june-2026-i-tried-to-beat-this-signal-with-59-agents) and then [the correction](#correction-june-2026) — the correction supersedes the power claims in the body.*
 
 ---
 
@@ -80,4 +80,24 @@ After publishing, I ran two large automated searches — 59 agents total — to 
 
 **3. The finding that matters most: nothing *outside* the disagreement family worked.** Across the two searches I tested 40-plus *genuinely different* mechanisms — nearest-neighbour reachability, firing-set similarity to correct exemplars, density / typicality, conformal nonconformity, Bayesian weight uncertainty, causal do-interventions, dynamical-systems basin depth, spectral reconstructability, query-by-committee. **None beat the binary champion. Several fell below chance.** Plain confidence, temperature calibration, density, and attribution-mass all fail too. The load-bearing ingredient is specifically **two-view disagreement** — comparing the model to its *reliable-feature self*. Everything that works refines that; everything that abandons it loses.
 
-**Updated bottom line:** the agreement *mechanism* is right, and surprisingly robust to a hard adversarial search. Grade it with reliable-code surprisal for a better trust *dial*. But the gain is in *ranking*, not fixed-coverage accuracy — and no non-disagreement signal I could invent does better. Scope unchanged: sentiment, one model, three OOD domains × two poolings (n = 6); reproduction in [`verify_surprisal.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/verify_surprisal.py) and [`coverage_matched_check.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/coverage_matched_check.py).
+**Updated bottom line:** the agreement *mechanism* is right, and surprisingly robust to a hard adversarial search. Grade it with reliable-code surprisal for a better trust *dial*. But the gain is in *ranking*, not fixed-coverage accuracy. *(See the [correction](#correction-june-2026) below — "no non-disagreement signal does better" is too strong; the precise dividing line is two-view **class-relative contrast**, not disagreement specifically.)* Scope: sentiment, one model, three OOD domains × two poolings; reproduction in [`verify_surprisal.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/verify_surprisal.py) and [`coverage_matched_check.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/coverage_matched_check.py).
+
+---
+
+## Correction (June 2026)
+
+I ran a third fleet to attack my *own methodology* — "why does nothing else work, and what did I get wrong?" It found real mistakes. I reproduced each one before writing this ([`audit_verify.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/audit_verify.py)). The headline conclusion survives, but three things in this post were overstated or wrong.
+
+**1. I overstated statistical power. "6/6, P≈1.0" treated six conditions as independent — they aren't.** The two poolings within each domain have correlated correctness (r = 0.53–0.61), so the honest unit is the *domain*: effective n ≈ 3–4, not 6. Re-tested with a domain-clustered bootstrap, the central claims *do* hold:
+
+- graded disagreement (surprisal) vs plain confidence: AUROC gap **+0.153, P = 1.000**;
+- binary agreement vs confidence: **+0.056, P = 0.988**;
+- surprisal vs binary agreement: **+0.097, P = 1.000**.
+
+So "interpretability beats confidence" stands under honest power accounting. What does *not* stand is the *bookkeeping* — these are ~3 domains, not 6 independent wins — and the gap between the agreement signal and the *best alternative method* is within noise at this n.
+
+**2. My AUGRC metric was biased toward the binary signal.** Ties were broken by dataset row order, and the OOD files are label-front-loaded, handing the binary signal a free ~**+0.011 AUGRC** advantage. (Fixing it with randomized tie-breaking actually *widens* the graded signals' lead, so this doesn't rescue any claim — it just means the binary number was slightly too kind.)
+
+**3. "No non-disagreement mechanism works" was too strong.** The accurate statement: *unconditional* novelty/density is anti-predictive (out-of-distribution **correct** points are often *farther* from the training center), but *class-conditional, two-view* methods do work. When the audit fixed four "failed" methods, they all rose to AUROC ~0.81–0.84 — and each turned out to be a graded two-view signal (correlation 0.68–0.76 with surprisal). So the load-bearing ingredient isn't "disagreement" narrowly; it's **two-view class-relative contrast** — comparing how the full model and its reliable-feature self each lean *toward a class*. Methods that abandon that lose; methods that recover it (even from a distance or familiarity starting point) win. That sharpens the finding rather than breaking it.
+
+**Net:** the mechanism is right and survived a hostile self-audit; the overclaim was in the *strength and independence* of the evidence, not its direction.
