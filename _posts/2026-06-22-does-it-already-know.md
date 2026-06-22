@@ -56,6 +56,21 @@ Combined with the [feature decoding](/2026/06/22/reliable-feature-account/#what-
 
 So the precise statement is: the latent answer is **present and decodable, but entangled** — the model's readout mixes stable and unstable features in a way you can't cleanly undo by ablation. That's a concrete, small illustration of *why eliciting latent knowledge is hard*: you can't just delete the bad part; you need a new way to read. ([`causal_ablation.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/causal_ablation.py).)
 
+## How to dig it out: the readout is the lever
+
+If subtraction doesn't work, what does? I tried two routes.
+
+**Erasure (failed, twice).** Identify the topic/domain subspace and project it out, then read sentiment. Both the naive version and a refined one (erase only the part of topic orthogonal to sentiment) **destroyed** the signal — accuracy fell to near chance (0.50–0.63). Topic and concept are entangled tightly enough that any direction you remove takes the answer with it. Erasure is the wrong tool.
+
+**A shift-robust readout (worked).** The fix is not to *remove* features but to *read* the stable ones differently. Swapping the logistic probe for a **difference-of-class-means** readout on the transfer-stable features — a readout known to be more robust under distribution shift — digs out markedly more, exactly where the model is most broken:
+
+| near-chance financial | model output | logistic on stable feats | **difference-of-means on stable feats** |
+|---|---:|---:|---:|
+| max-pool | 0.588 | 0.817 | **0.929** (CI 0.90–0.96) |
+| mean-pool | 0.504 | 0.687 | **0.767** (CI 0.72–0.82) |
+
+The improvement over the logistic readout is significant (paired bootstrap P = 1.00 / 0.996), the predictions are class-balanced (not a degenerate one-class trick), and it's identical across threshold choices. On a domain where the model's own answer is a coin flip, **a difference-of-means readout on its stable features recovers the right sentiment 93% of the time.** So the latent answer is not just present — with the right readout it is *substantially* recoverable. The constructive lesson for eliciting latent knowledge under shift: **select transfer-stable features, and read them with a shift-robust estimator (mass-mean), not a logistic probe — and don't try to erase the distractor.** ([`dig_out_knowledge.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/dig_out_knowledge.py), [`verify_massmean.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/verify_massmean.py).)
+
 ## Honest scope and caveats
 
 - The rigorous statement is "**the correct answer is linearly decodable from the transfer-stable subspace** on ~62% of the model's OOD errors," not "the model consciously knows." Probing-based latent-knowledge claims carry the standard caveat: decodability is not proof the model *uses* that information downstream.
