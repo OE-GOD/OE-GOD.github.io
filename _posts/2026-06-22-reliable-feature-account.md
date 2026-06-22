@@ -42,6 +42,20 @@ You don't even need the second probe. Score a prediction by how much of *its own
 
 The interpretability signal's advantage over confidence **doubles as the model gets worse.** On near-chance financial, you can't fix the prediction — but you can still reliably *gate* it (lifting selective accuracy 0.50→0.83+ at matched coverage). A monitor whose edge grows in the regime you actually care about is the property you want from a safety tool.
 
+## What the model is actually thinking (reading the features)
+
+The robust/fragile split isn't just statistical — I read what the features *mean* (Gemma Scope's published interpretations). The split is **semantic**, and it decodes the model's reasoning on a mistake.
+
+The transfer-stable features the model uses for sentiment are **genuine evaluative concepts**, every one I checked: *"negative sentiments about experiences in reviews," "bad/undesirable things — harms, losses, pain," "positive attributes and evaluations," "positive outcomes related to success and well-being."*
+
+The fragile features that **drive its wrong financial calls** are **topic and format detectors — not sentiment at all**: *"scientific analysis and experimental protocols," "business operations, sales, marketing, partnerships," "gene and drug names in medical trials," "financial transactions and market evaluations," "online gambling and purchases," "celebrity events,"* even *"dashes and hyphens."* These fire on **up to 95%** of financial headlines versus **~1%** in training.
+
+So here is the model's actual reasoning when it gets a financial headline wrong, in plain terms:
+
+> Its sentiment judgment mixes two kinds of features — *real valence concepts* and *topic detectors* that fire on whatever the text is **about**. In training (reviews) both correlated with sentiment, so the probe used both. On a financial headline the topic detectors ("this is markets / medicine / business") fire **en masse** — they say nothing about good-vs-bad news — and their combined activation **overrides the genuine sentiment features and flips the call.** The model isn't reading sentiment there; it's partly pattern-matching on subject matter.
+
+This is what ties the whole arc together. "Reliable features" turn out to be **the real task concept** — that's *why* restricting to them transfers. "Unreliable features" are **topic/surface detectors** — that's *why* they don't. The trust signal works because it asks, in effect, *"is this call backed by concept features or by topic detectors?"* And density failed precisely because **topic-distance is exactly what makes financial text look novel** — orthogonal to whether the sentiment call is right. (Scope: auto-interp labels from GPT-4o-mini, 14 features read, max-pool on financial — illustrative of the mechanism, not an exhaustive audit.)
+
 ## The correction: this is not a universal law (and I almost published it as one)
 
 My instinct was "two-view disagreement is all you need; density/novelty never helps." A fleet built to *prove* that instead **refuted it**, and I reproduced the counterexample:
