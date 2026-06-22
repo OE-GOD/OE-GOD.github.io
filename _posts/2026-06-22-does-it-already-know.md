@@ -50,6 +50,12 @@ The effect is **strongest exactly where the output is weakest.** On financial he
 
 Combined with the [feature decoding](/2026/06/22/reliable-feature-account/#what-the-model-is-actually-thinking-reading-the-features), the full mechanistic story is now: *genuine valence features compute the right answer; topic detectors fire on the new domain's subject matter and override them; but the right answer remains linearly decodable from the stable subspace 62% of the time.* That's a complete, testable account of an OOD error as a **suppressed-but-present** correct computation.
 
+## A causal caveat: present, but not recoverable by subtraction
+
+"Readout corruption" suggests a clean fix: if topic features merely *add* a wrong push, deleting them from the model's existing readout should restore the right answer. I tested that causally — and **it doesn't work.** Zeroing the least-transfer-stable features at the input to the *original* probe leaves financial accuracy flat (~0.50–0.58), no better than zeroing the same number of *random* features; remove too many and it degrades. The correct answer is recoverable only by **retraining** a readout on the stable subspace (the 62% result above), not by *subtracting* the unstable features from the original one.
+
+So the precise statement is: the latent answer is **present and decodable, but entangled** — the model's readout mixes stable and unstable features in a way you can't cleanly undo by ablation. That's a concrete, small illustration of *why eliciting latent knowledge is hard*: you can't just delete the bad part; you need a new way to read. ([`causal_ablation.py`](https://github.com/OE-GOD/sae-feature-realness/blob/main/causal_ablation.py).)
+
 ## Honest scope and caveats
 
 - The rigorous statement is "**the correct answer is linearly decodable from the transfer-stable subspace** on ~62% of the model's OOD errors," not "the model consciously knows." Probing-based latent-knowledge claims carry the standard caveat: decodability is not proof the model *uses* that information downstream.
