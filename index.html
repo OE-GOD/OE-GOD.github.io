@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/22/drivers-and-thermometers/">Drivers and thermometers: what a model represents vs what it thinks with</a>
+      <span class="post-date">June 22, 2026</span>
+      <p class="post-excerpt">The unifying result. From first principles: a concept is a direction, and a real one should both <em>read</em> (decode) and <em>write</em> (steer). Tested on Gemma-2-2b: sentiment reads <em>and</em> writes (a clean steering knob, swing ~2.9) — a <strong>driver</strong>; truth reads just as well (~0.66 AUROC) but barely writes (~0) — a <strong>thermometer</strong>. The model <em>reasons with</em> concepts but only <em>carries</em> facts. This single read≠write axis unifies the whole arc (trust, latent knowledge, the factual boundary) and explains confident hallucination and why fact-editing doesn't stick. Honest 2B caveat with a falsifiable scale prediction: truth should turn from thermometer to driver in bigger models.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/22/does-it-already-know/">When a model is wrong, does it already know better? Recovering suppressed answers from transfer-stable features</a>
       <span class="post-date">June 22, 2026</span>
       <p class="post-excerpt">An eliciting-latent-knowledge result. When this sentiment model is wrong out-of-distribution, is the right answer still inside it, suppressed? Using the transfer-stable feature subspace as a latent-knowledge probe: across 897 OOD errors, the robust core recovers the correct answer <strong>61.5%</strong> of the time (CI 58–65%) vs 49% for random features — and ~69% on near-chance financial headlines. So most OOD errors are <em>readout corruption, not ignorance</em>: spurious topic features override genuine concept features, but the correct computation is still linearly decodable. The model already knew.</p>
