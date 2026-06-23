@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/23/compositional-toolbox/">The model's compositional toolbox: averaging, amplifying, and a negation that won't cancel</a>
+      <span class="post-date">June 23, 2026</span>
+      <p class="post-excerpt">Does the model do <em>algebra</em> on concepts? Tested four composition operators on Gemma-2-2b sentiment: conjunction = clean <strong>averaging</strong> (judge(A and B) ≈ mean of parts); intensification = symmetric <strong>gain</strong> (extremely good/bad both amplify); negation = a reusable causal <strong>flip/driver</strong> (cos 0.92, steering flips judgments); double-negation = <strong>broken</strong> — "not not good" saturates and won't return to positive. No single law: a heterogeneous toolbox, some operators clean and roughly linear, one outright broken. The seductive "one asymmetry governs everything" hypothesis died under a clean test — the most useful thing that happened.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/23/the-driver-map/">The driver map: finding what a model thinks with — and catching the tool when it goes blind</a>
       <span class="post-date">June 23, 2026</span>
       <p class="post-excerpt">The engineering companion: which of a concept's thousands of features does the model actually <em>think with</em>? You can't read it off — you measure cause (steer/ablate). Mapping read-score vs cause-score over 9,037 Gemma features: correlation ≈ 0 — most readable features are thermometers, not drivers (replicating the project's first Pythia finding). And a live lesson in instrument-blindness: the cheap tool (attribution patching) caught 3 of 4 steering-confirmed drivers but <em>went blind on one</em> (a real driver buried at rank 1298) — exactly the LayerNorm/saturation false-negative predicted for a residual-stream SAE at mid-depth. To find what a model thinks with, measure causation — and check the causation tool against a real intervention.</p>
