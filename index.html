@@ -64,6 +64,12 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/06/30/read-early-steer-late/">Read early, steer late: a concept is detectable at layer 0 but only controllable deep</a>
+      <span class="post-date">June 30, 2026</span>
+      <p class="post-excerpt">Where does the read≠cause split live across a model's depth? For four concepts I measured the layer at which each becomes <em>readable</em> (decodable) vs <em>steerable</em> (intervening changes the output). The gap is large and consistent: every concept is perfectly readable at <strong>layer 0</strong> (it's in the words) but only steerable at <strong>layers 15–18</strong> (near where the model commits to an answer). Detection is lexical and immediate; control is deep and late — so decodability at a layer does <em>not</em> imply control there. Plus a sub-investigation locating "certainty" at ~layer 15 (weakly), and a tidy "abstraction = depth" prediction that the data refuted. Built with <a href="https://github.com/OE-GOD/featurescope">FeatureScope</a>.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/23/compositional-but-not-a-direction/">Compositional but not a direction: when the model's reasoning lives in attention, not a vector</a>
       <span class="post-date">June 23, 2026</span>
       <p class="post-excerpt">The capstone — the operator type that breaks the "concepts are directions" paradigm. Comparison ("A better than B") genuinely binds the role (winner flips +2.31 when you flip better↔worse, entities frozen) — but it is <em>not a direction</em>: the role-vector built exactly like the negation driver has reusability cosine 0.02 (vs 0.92) and steering never flips the winner (0% at k=8). Predicted from first principles: a position-agnostic vector can't encode <em>which</em> entity wins, so the model must do it by attention. Completes the typology (negation/intensification/conjunction = directions; comparison = attention-routing) and marks a real limit of the probing-and-steering toolkit: relational reasoning lives in circuits, not vectors.</p>
