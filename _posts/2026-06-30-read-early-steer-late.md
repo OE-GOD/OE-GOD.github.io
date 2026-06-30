@@ -40,6 +40,17 @@ Every concept is **perfectly readable at layer 0** (the embeddings) yet only **s
 - **Control is deep and late.** To change the model's *output*, you have to intervene near where it **commits to an answer**. A steer made early gets reworked and washed out by the layers above it before it reaches the output; a steer made late lands almost intact.
 - So **read-depth ≠ steer-depth**: a concept is *readable early but most steerable late*. This is `read ≠ cause`, now shown across depth — and a concrete caution for interpretability: **decodability at a layer does not imply control at that layer.** A linear probe firing at layer 6 tells you the information is *present*; it says nothing about whether intervening there moves the behaviour.
 
+## The converse: reasoning concepts read *late*
+
+The four concepts above read at layer 0 because they're **lexical** — the signal sits in the words. So I tested the converse: a **reasoning** concept the surface can't reveal. **Arithmetic correctness**, as minimal pairs — `3 + 4 = 7` vs `3 + 4 = 8` — where the answer tokens overlap between the correct and incorrect sets, so there's no lexical tell; you must *compute the sum.*
+
+| concept | read-depth |
+|---|---|
+| sentiment (surface) | L0 |
+| arithmetic (reasoning) | **L20** |
+
+Arithmetic hovers near chance (~0.7) through the early and middle layers and only becomes cleanly decodable at **layer 20** — once the model has actually done the computation. So **read-depth tracks how much computation a concept needs**: lexical concepts are available at layer 0; a concept requiring arithmetic isn't available until deep. "Everything reads at layer 0" was an artifact of testing only *lexical* concepts. The richer statement: *where you can decode a concept tells you where the model **computed** it* — immediate for surface features, deep for reasoning.
+
 ## A sub-investigation: where does "certainty" live?
 
 Certainty was the instructive one. At layer 12 it **failed** the tool's self-test — the synthetic "certainty direction" was too weak to clear the bar, so FeatureScope **refused to label it** rather than emit noise. Diagnosis by elimination:
