@@ -64,7 +64,9 @@ I checked this the honest way — re-measuring read *and* steer in the **same** 
 
 The reading that ties it together: **surface** concepts are *readable from the input* and *controllable near the output*; **reasoning** concepts are *controllable while being computed* (mid-layers, where the answer is still forming) and *readable once computed* (deep). You intervene during the computation; you read the result after it.
 
-*Caveats, kept honest:* the raw-residual read is weak/noisy (max AUROC 0.82; the clean read-late signal is the SAE-feature version at L20). And an unexplained anomaly — steering at L20, exactly where reading is cleanest, has a *negative* effect (represent ≠ control at the committed layer? or noise?). Sixteen examples, one 2B model. A lead worth chasing, not a closed case.
+*Caveats, kept honest:* the raw-residual read is weak/noisy (max AUROC 0.82; the clean read-late signal is the SAE-feature version at L20). One 2B model, arithmetic only.
+
+**A twist worth its own line — and it turned out real.** At L20, steering the correctness direction had a *negative* effect — it pushed the verdict *toward* "incorrect," exactly where correctness reads cleanest. I chased it with 40 example-pairs and finer layers, and it held up: at **L20–21** the effect is **dose-dependent negative** with a CI entirely below zero (steer harder → backfire more) — not a fluke. So at the *committed* layers the answer is **represented but not controllable**: steering *disrupts* the settled computation (the verdict flips toward "incorrect") instead of steering it — a clean `represent ≠ control` at depth. (Why the disruption specifically reads as "incorrect" is interpretation, not proof.)
 
 ## A sub-investigation: where does "certainty" live?
 
