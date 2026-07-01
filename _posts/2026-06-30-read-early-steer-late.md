@@ -51,6 +51,21 @@ The four concepts above read at layer 0 because they're **lexical** — the sign
 
 Arithmetic hovers near chance (~0.7) through the early and middle layers and only becomes cleanly decodable at **layer 20** — once the model has actually done the computation. So **read-depth tracks how much computation a concept needs**: lexical concepts are available at layer 0; a concept requiring arithmetic isn't available until deep. "Everything reads at layer 0" was an artifact of testing only *lexical* concepts. The richer statement: *where you can decode a concept tells you where the model **computed** it* — immediate for surface features, deep for reasoning.
 
+## And reasoning *reverses* the read/steer order
+
+Steering arithmetic completed the surprise. Measuring where it's *steerable* per layer, it's a strong lever in the **mid** layers (L12–18, peak z ≈ 8.4 at L12) and fails **deep** (near-zero/negative at L20+). So for a reasoning concept the order **flips**: steer-depth (mid) is *shallower* than read-depth (late) — the opposite of surface concepts.
+
+I checked this the honest way — re-measuring read *and* steer in the **same** representation (raw-residual difference-of-means), since a first pass had used different rulers for each. The reversal survived: read still peaks deep (L24), steer still peaks mid (L12).
+
+| concept type | read-depth | steer-depth |
+|---|---|---|
+| surface (sentiment, toxicity, …) | early (L0) | late (L15–18) |
+| reasoning (arithmetic) | late (L20–24) | mid (L12–18) |
+
+The reading that ties it together: **surface** concepts are *readable from the input* and *controllable near the output*; **reasoning** concepts are *controllable while being computed* (mid-layers, where the answer is still forming) and *readable once computed* (deep). You intervene during the computation; you read the result after it.
+
+*Caveats, kept honest:* the raw-residual read is weak/noisy (max AUROC 0.82; the clean read-late signal is the SAE-feature version at L20). And an unexplained anomaly — steering at L20, exactly where reading is cleanest, has a *negative* effect (represent ≠ control at the committed layer? or noise?). Sixteen examples, one 2B model. A lead worth chasing, not a closed case.
+
 ## A sub-investigation: where does "certainty" live?
 
 Certainty was the instructive one. At layer 12 it **failed** the tool's self-test — the synthetic "certainty direction" was too weak to clear the bar, so FeatureScope **refused to label it** rather than emit noise. Diagnosis by elimination:
