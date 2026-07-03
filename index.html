@@ -64,6 +64,18 @@ layout: home
 
   <ul class="post-list">
     <li class="post-item">
+      <a class="post-link" href="/2026/07/02/sae-geometry-part-two-interactions/">SAE geometry, part two: measure the interactions, not the features</a>
+      <span class="post-date">July 2, 2026</span>
+      <p class="post-excerpt">A follow-up. The first post killed five ways of measuring SAE feature function — all negative, all spectrum artifacts. This one asks the question that survives: a feature's function is how it <em>combines</em> with other features, not what it does alone, so I measured the network's actual feature <strong>interactions</strong> (the MLP's second-order coupling). Geometrically-close features genuinely interact more — and it is the <strong>only</strong> positive in the whole project to survive the spectrum-matched-random control that refuted everything else. But I over-reported it (+0.30); an adversarial pass (three skeptics + judge) caught that the honest rank-robust number is <strong>~+0.16</strong>, and that a single <em>global</em> per-feature scalar out-predicts geometric neighbors ~2:1 at recovering a feature's true interaction partners. The answer: mostly global, with a thin but real local component — global-sufficient, local-insufficient. Code: <a href="https://github.com/OE-GOD/feature-geometry-locality">feature-geometry-locality</a>.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/02/sae-geometry-does-not-predict-function/">A random matrix debunked my SAE-geometry result. Every time.</a>
+      <span class="post-date">July 2, 2026</span>
+      <p class="post-excerpt">Does SAE feature <em>geometry</em> reflect function (Sharkey et al.'s open problem — is it local or global)? I found a beautiful "local halo" — geometrically-close features looked functionally similar — then killed it <strong>five times</strong>, across three independent notions of function (direct effect, nonlinear on-distribution ablation, co-firing). Each time a <strong>spectrum-matched random matrix</strong> reproduced the halo bin-for-bin: the signal was measuring the proxy's spectrum, not the network. The reusable lesson: never headline a geometry→function statistic without a spectrum-matched null — raw R² and the intuitive label-permutation null are both beaten by any fixed linear map. Plus the mechanism behind the recurring confound (a shared confidence-collapse direction that promotes glitch tokens). Code: <a href="https://github.com/OE-GOD/feature-geometry-locality">feature-geometry-locality</a>.</p>
+    </li>
+
+    <li class="post-item">
       <a class="post-link" href="/2026/06/30/read-early-steer-late/">Read early, steer late: a concept is detectable at layer 0 but only controllable deep</a>
       <span class="post-date">June 30, 2026</span>
       <p class="post-excerpt">Where does the read≠cause split live across a model's depth? For four concepts I measured the layer at which each becomes <em>readable</em> (decodable) vs <em>steerable</em> (intervening changes the output). The gap is large and consistent: every concept is perfectly readable at <strong>layer 0</strong> (it's in the words) but only steerable at <strong>layers 15–18</strong> (near where the model commits to an answer). Detection is lexical and immediate; control is deep and late — so decodability at a layer does <em>not</em> imply control there. Plus a sub-investigation locating "certainty" at ~layer 15 (weakly), and a tidy "abstraction = depth" prediction that the data refuted. Built with <a href="https://github.com/OE-GOD/featurescope">FeatureScope</a>.</p>
