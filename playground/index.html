@@ -27,7 +27,7 @@ Pick a sentence → see which "thought detectors" fire in the model's mind → p
 <div class="glabel" id="score"></div>
 <h3 style="font-size:15px">Features firing (its "thoughts")</h3><div id="chips"></div>
 <div class="panel" id="steerbox" style="display:none">
-  <b id="steertitle"></b><br><br>
+  <b id="steertitle"></b> <a id="nplink" target="_blank" style="font-size:12px">Neuronpedia ↗</a><br><br>
   <button onclick="push(15)">Push gently</button><button onclick="push(30)">Push hard</button>
   <div id="result" class="muted" style="margin-top:10px"></div>
 </div>
@@ -46,7 +46,7 @@ function load(i){cur=i;sel=null;const d=DATA[i];gauge(d.readout);$("steerbox").s
  $("chips").innerHTML=d.features.map((f,j)=>`<span class="chip v-${f.verdict}" onclick="pick(${j},this)"><b>${f.id}</b>${f.act}<span class="tag">${TAG[f.verdict]}</span></span>`).join("")}
 function pick(j,el){sel=j;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("sel"));el.classList.add("sel");
  const f=DATA[cur].features[j];$("steerbox").style.display="block";
- $("steertitle").textContent="feature "+f.id+" — "+f.verdict.replace(/_/g," ");$("result").textContent=""}
+ document.getElementById("nplink").href="https://www.neuronpedia.org/gemma-2-2b/12-gemmascope-res-16k/"+(typeof ANA!=="undefined"&&ANA?ANA.features[j].id:DATA[cur].features[j].id);/*np_set*/$("steertitle").textContent="feature "+f.id+" — "+f.verdict.replace(/_/g," ");$("result").textContent=""}
 function push(d){const f=DATA[cur].features[sel];const r=f.push[String(d)];gauge(r.steered);
  $("result").innerHTML=`before <b>${r.base}</b> → after <b>${r.steered}</b> &nbsp;<span class="delta" style="color:${Math.abs(r.delta)>0.3?"#2a78d6":"#999"}">Δ ${r.delta>0?"+":""}${r.delta}</span> ${Math.abs(r.delta)>0.3?"— it moved! this thought DOES something":"— barely moved: a gauge, not a lever"}`}
 DATA.forEach((d,i)=>{const o=document.createElement("option");o.value=i;o.textContent=d.text;$("sent").appendChild(o)});
