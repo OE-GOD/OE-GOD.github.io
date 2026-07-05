@@ -6,6 +6,14 @@ date: 2026-07-03
 
 # The map was mostly blank
 
+> **Correction, July 5, 2026.** The central *mechanism* this post proposes — that the
+> map is blank *because* the model's response is ~99% feature-agnostic — did not
+> survive a scale-and-recipe test. That ~99% turned out to be a property of the SAE
+> training recipe, not of the network. The negative result itself (geometry does not
+> predict function) survived and got stronger. Details in the dated correction at the
+> end of this post and in the [follow-up post](/2026/07/05/sae-geometry-at-scale/).
+> The original text below is unedited.
+
 *Third and last in a series. [Part one](/2026/07/02/sae-geometry-does-not-predict-function/)
 killed five ways of showing SAE feature geometry reflects function — all
 negative, all spectrum artifacts. [Part two](/2026/07/02/sae-geometry-part-two-interactions/)
@@ -121,3 +129,36 @@ The map was mostly blank. But I can tell you, now, *why* it's blank — and in a
 field where it is very easy to publish a beautiful number a random matrix would
 have drawn for you, the blank map with a reason is the more honest artifact. I'll
 take it.
+
+---
+
+## Correction (July 5, 2026)
+
+Two days after publishing this, I tested the claim that carries this post — and it
+broke. Reporting that here rather than editing the text above.
+
+**What this post claimed:** the geometry map is blank *because* the model's response
+to any feature is ~99% one feature-agnostic mode — "the model isn't listening to
+which feature you touched."
+
+**What the new measurements show** (GPT-2 vs Gemma-2-2b vs a same-family Pythia
+ladder at 70m/160m/410m with one shared SAE recipe; code and numbers in the
+[repo](https://github.com/OE-GOD/feature-geometry-locality)):
+
+- The size of that shared mode tracks the **SAE training recipe**, not the network:
+  ~69% for the ReLU SAE this post used, ~7% for JumpReLU on Gemma, ~5% for top-k on
+  Pythia (magnitude-controlled, matched feature counts).
+- In the controlled Pythia ladder it is **flat across a 6× scale range** — it is not
+  a fact about model size either.
+- On Gemma, the response is largely feature-*specific* (7% shared) — and geometry
+  **still** fails to predict function there. So feature-agnosticism cannot be the
+  reason the map is blank.
+
+**What survives:** the negative itself, strengthened — geometry predicts function
+below matched-null level at every scale, family, and SAE recipe tested. And the
+post's broader lesson survives in a sharper form than I intended: I wrote that I had
+been "studying a lens, not the object." The ~99% number was exactly that — a
+property of the lens (the SAE recipe), which I mistook for a property of the object.
+
+The follow-up post has the full story:
+[Was the map blank because the model was small?](/2026/07/05/sae-geometry-at-scale/)
