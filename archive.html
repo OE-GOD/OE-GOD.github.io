@@ -1,0 +1,178 @@
+---
+layout: home
+title: Archive
+permalink: /archive/
+---
+
+<div class="hero">
+  <h1>Archive</h1>
+  <p class="tagline"><a href="/">← Back to home</a></p>
+</div>
+
+{% include honest-note.html %}
+
+<section>
+  <p>These posts are kept as published, corrections included; the only edit is a dated disclosure note on the SAE paper post. Deleting them would hide the mistakes, and the mistakes are part of the record. But I haven't yet checked that I can explain and defend each one on my own, so they are not on the front page. Some contain claims that are bigger than one experiment supports; read them as working notes, not results.</p>
+</section>
+
+<section>
+  <h2>The SAE paper</h2>
+  <ul class="post-list">
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/01/sae-pythia-160m/">Auto-interp Labels Conflate Driver and Thermometer SAE Features</a>
+      <span class="post-date">June 1, 2026</span>
+      <p class="post-excerpt">A blog version of the SAE characterization paper, written for circuit researchers. Includes a "what I learned" section on causal-validation methodology.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>SAE geometry series</h2>
+  <ul class="post-list">
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/02/sae-geometry-does-not-predict-function/">A random matrix debunked my SAE-geometry result. Every time.</a>
+      <span class="post-date">July 2, 2026</span>
+      <p class="post-excerpt">Does SAE feature <em>geometry</em> reflect function (Sharkey et al.'s open problem — is it local or global)? I found a beautiful "local halo" — geometrically-close features looked functionally similar — then killed it <strong>five times</strong>, across three independent notions of function (direct effect, nonlinear on-distribution ablation, co-firing). Each time a <strong>spectrum-matched random matrix</strong> reproduced the halo bin-for-bin: the signal was measuring the proxy's spectrum, not the network. The reusable lesson: never headline a geometry→function statistic without a spectrum-matched null — raw R² and the intuitive label-permutation null are both beaten by any fixed linear map. Plus the mechanism behind the recurring confound (a shared confidence-collapse direction that promotes glitch tokens). Code: <a href="https://github.com/OE-GOD/feature-geometry-locality">feature-geometry-locality</a>.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/02/sae-geometry-part-two-interactions/">SAE geometry, part two: measure the interactions, not the features</a>
+      <span class="post-date">July 2, 2026</span>
+      <p class="post-excerpt">A follow-up. The first post killed five ways of measuring SAE feature function — all negative, all spectrum artifacts. This one asks the question that survives: a feature's function is how it <em>combines</em> with other features, not what it does alone, so I measured the network's actual feature <strong>interactions</strong> (the MLP's second-order coupling). Geometrically-close features genuinely interact more — and it is the <strong>only</strong> positive in the whole project to survive the spectrum-matched-random control that refuted everything else. But I over-reported it (+0.30); an adversarial pass (three skeptics + judge) caught that the honest rank-robust number is <strong>~+0.16</strong>, and that a single <em>global</em> per-feature scalar out-predicts geometric neighbors ~2:1 at recovering a feature's true interaction partners. The answer: mostly global, with a thin but real local component — global-sufficient, local-insufficient. Code: <a href="https://github.com/OE-GOD/feature-geometry-locality">feature-geometry-locality</a>.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/03/why-the-map-was-blank/">The map was mostly blank: why SAE feature geometry doesn't predict function</a>
+      <span class="post-date">July 3, 2026 · corrected July 5</span>
+      <p class="post-excerpt"><strong>[Corrected July 5, 2026:</strong> the mechanism below — the ~99% feature-agnostic response as the <em>reason</em> geometry fails — turned out to be an SAE-recipe artifact; see the dated correction on the post and the July 5 follow-up.<strong>]</strong> Third in the SAE-geometry series — a first-principles post-mortem. After five dead positives, the question left isn't <em>whether</em> geometry predicts function but <strong>why it can't</strong>. Function is <code>model(geometry)</code>, yet every proxy showed the model's response to a feature is ~99% one <em>feature-agnostic</em> mode — ablate any feature and the same generic "I've been damaged" response fires. So the geometry→function map is real but nearly <strong>flat</strong>: the model mostly isn't listening to <em>which</em> feature you perturbed, and the ~1–2% that is feature-specific is where the artifacts lived. Not a failure: a real, non-obvious fact and the field's comfortable assumption falsified. The method, stated once: here you can't be right, only wrong <em>less</em>.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/05/sae-geometry-at-scale/">Was the map blank because the model was small? A scale ladder, and a claim I killed</a>
+      <span class="post-date">July 5, 2026</span>
+      <p class="post-excerpt">The strongest objection to the whole series: maybe functional geometry only emerges past a scale threshold, and GPT-2-small is below it. Tested at 17× (Gemma-2-2b), then on a clean same-family ladder (Pythia 70m→160m→410m, one SAE recipe, scale the only variable). What survived, stronger than before: geometry predicts co-firing <em>below</em> matched-null level at every scale, family, and recipe (z = −16, −7, −55, −37, −40). What died: my own shiny new claim. The "~99% feature-agnostic response" from part three <strong>collapsed 69%→7%</strong> going to Gemma — which looked like a scale discovery until the ladder showed it flat across 6× scale. It tracks the <em>SAE recipe</em> (ReLU vs JumpReLU vs top-k), not the network: I was measuring my instrument and calling it a finding. Part three now carries a dated correction. The only claim surviving every null, recipe, scale, and family is the negative itself.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/05/the-models-own-ruler/">The model's own ruler: I preregistered the last escape hatch, and the instrument failure was the finding</a>
+      <span class="post-date">July 5, 2026</span>
+      <p class="post-excerpt">Fifth in the SAE-geometry series, and the first run under full <strong>pre-registration</strong> — hypothesis, gates, decision lines, and honest predictions frozen in a git commit before any data. The last objection standing: maybe cosine is the wrong metric, and geometry should be measured in the <em>model's own coordinates</em> — inject each feature direction, record the model's response, compare responses. The null: rigid <em>rotations</em> of the decoder set, which preserve all 79,800 pairwise angles and destroy only alignment to the weights. Result, twice: <strong>indeterminate — instrument</strong>. The stability gate failed on exactly the row my frozen prediction table flagged as most-likely-to-break, and quadrupling the data made stability <em>worse</em> — the signature of measuring something that isn't stably there. My reading, marked as interpretation: the model's responses barely encode feature identity at all, so no re-metrization can conjure a functional map from them. Both of my wrong predictions are printed next to the ones that held.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/05/interactions-predict-function/">After five negatives, a preregistered positive: feature interactions predict function, and the weights carry it</a>
+      <span class="post-date">July 5, 2026</span>
+      <p class="post-excerpt">The series' first <strong>CONFIRM</strong> — preregistered, gate-passed, control-checked. The one signal that never died was second-order: inject two feature directions together and measure how much the MLP's response exceeds the sum of parts. Instrument checked first (split-half <strong>+0.95</strong>, vs the ruler's 0.26), then the never-computed question frozen in a public commit: does interaction structure predict <em>co-firing</em>? Result: rho +0.113 vs rotation nulls at +0.012 — <strong>z = +33.5</strong>, surviving a raw-cosine partial at +32.4. The occupancy control (recompute at base points where <em>none</em> of the 200 features fires) didn't move it: the coupling is carried by the <strong>weights</strong>. My frozen predictions were too pessimistic, and that miss is printed too. Calibration: ~1.3% of pair variance — a genuine organizational signal, ten times its matched null, not yet a map. The organization of SAE features exists; it lives in the <em>combinations</em>, not the angles.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/10/shards-and-coordinates/">My design was killed six ways. What survived: SAE features share subspaces — and sometimes the coordinates inside them mean something</a>
+      <span class="post-date">July 10, 2026</span>
+      <p class="post-excerpt">Goodfire's Block-Sparse Featurizers paper says a concept is a small <em>subspace</em> that an SAE shatters into shards. Testing that in a language model went through the full discipline: my first design was <strong>killed by my own adversarial review</strong> (six fatal flaws — including a null that my own prior results pre-satisfied, sampling that could never contain a feature's shard-mates, and a statistic blind to plane-vs-cone), rebuilt from first principles, then a pilot caught two more artifacts before the prereg froze. What survived: at matched cosine-to-seed, a feature's top interaction partners are ~4× more <em>mutually</em> aligned than chance — <strong>z = +84</strong>, prediction bins held. Then the deeper question — does <em>position inside</em> a subspace mean anything? <strong>Months: yes</strong>, twice (interaction falls with circular calendar distance, z −5.9; circulant Fourier structure, z +5.9). <strong>Days: no</strong> — after fixing a real selection bug (Wednesday and Thursday shared one feature), the signal vanished, and per the pre-committed one-rerun rule that refutation stands. Meaning is not in the angles: it lives in function-selected subspaces, and sometimes in their internal coordinates.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>Reliability / out-of-distribution series</h2>
+  <ul class="post-list">
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/17/are-sae-features-real/">Are SAE features real? Stop certifying features, validate detectors</a>
+      <span class="post-date">June 17, 2026</span>
+      <p class="post-excerpt">Individual SAE features mostly can't be certified "real" — only ~1–2% replicate across seeds, and "realness" splits into independent axes (stability, causation, interpretability) that disagree. The trustworthy unit is a <em>validated detector</em>: a sparse feature combination judged by held-out <em>and cross-distribution</em> task performance. A recipe search (L1-select + MLP) reaches ~0.98 cross-distribution F1 on surface concepts on a real Gemma Scope SAE; semantic concepts improve to ~0.82 but aren't cleanly robust. Positions the work against SAEBench and Paulo &amp; Belrose.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/20/detect-and-steer-frontier/">Detecting and steering SAE features: where it works, where it breaks</a>
+      <span class="post-date">June 20, 2026</span>
+      <p class="post-excerpt">A 60-agent search for the best cross-distribution detector recipe (L1-select + MLP; the optimal feature count scales with SAE width — 100 on a 2k SAE, 400 on Gemma Scope's 16k), then steering along feature directions. The detector finding holds: surface properties are far more tractable than semantic/safety ones. Includes a retraction — a "causal direction beats probe direction for detox" result I first published fell apart under rigorous measurement (real classifiers, 288 sampled generations). The rerun caught my own weak-metric artifact, which is exactly the standard this project holds the field to.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/20/despurious-cross-distribution/">Removing spurious features makes a semantic detector generalize</a>
+      <span class="post-date">June 20, 2026</span>
+      <p class="post-excerpt">Semantic detectors built from SAE features don't transfer across distributions — a sentiment probe trained on movie reviews scores 0.66 on product reviews because it partly learns domain vocabulary. Dropping the domain-spurious features raises cross-distribution F1 to ~0.73 (verified leak-free, ~9σ over a random control). But the follow-up deflated the headline: a better base recipe (max-pooling + selection) reaches 0.77 <em>without</em> de-spuriousing, and the levers don't compound — so de-spuriousing rescues a weak detector, while recipe choice is the bigger lever. Both the result and its correction are kept visible, same standard as the prior post's retraction.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/21/trustworthy-by-abstention/">Trustworthy not by being right, but by knowing when it's wrong</a>
+      <span class="post-date">June 21, 2026</span>
+      <p class="post-excerpt">Capstone. Every attempt to make an SAE-feature detector more <em>accurate</em> out-of-distribution failed (de-spuriousing, a generalization predictor, sign-stability, multi-domain training — eleven methods, no reliable win). So I reframed: a trustworthy detector isn't one that's always right, it's one that knows when it's wrong and abstains. That works — abstaining on the least-confident half raises OOD accuracy ~0.73→0.83 across three held-out domains, verified vs random abstention. Honest catch: the working signal is plain classifier confidence (selective prediction), not the interpretability-native one I hoped for, which failed at chance.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/21/interpretability-beats-confidence/">When interpretability beats confidence: distrust the answer your trustworthy self rejects</a>
+      <span class="post-date">June 21, 2026</span>
+      <p class="post-excerpt">The capstone ended on a catch — a detector could tell when it was wrong OOD, but plain confidence did the work and the interpretability signal failed. This is the sharpened version that flips it: distrust a prediction when the full detector disagrees with the version of itself that uses only its trustworthy (transfer-stable) features. It beats plain confidence at knowing-when-wrong on all six conditions (3 domains × 2 poolings, paired P≈1.0) — and a control (random-feature sub-models, which only tie confidence) proves the interpretability is load-bearing. The first verified case in the program where an interpretability-native method beats the simple baseline. <strong>Updated + corrected:</strong> a 59-agent search finds a graded refinement (reliable-code surprisal, AUROC 0.73→0.83); a follow-up self-audit then caught real mistakes in my own evaluation — the "6/6, P≈1.0" framing overstated power (the poolings are correlated, so n≈3 domains), the AUGRC metric was biased toward the binary signal, and the precise dividing line is two-view class-relative contrast, not "disagreement." The core claim survives domain-clustered significance; the overclaim was in the evidence's strength, not its direction.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/21/placing-the-result/">Placing a result: where "interpretability beats confidence" sits in the literature — and the paper that's its biggest threat</a>
+      <span class="post-date">June 21, 2026</span>
+      <p class="post-excerpt">Before building on the agreement-signal result, I did what a finding that size deserves: reproduced it from scratch as a saved script (a review of my own work caught that it had never actually been saved — only run inline), then read the field hard enough to place it. It sits in an empty cell between disagreement-for-reliability (Agreement-on-the-Line) and interpretability-native abstention (Ferrando et al.'s "Do I Know This Entity?"). The biggest threat is Kantamneni et al.'s "Are SAEs Useful?" — SAEs don't beat baselines under covariate shift — so I narrow the claim to selective <em>risk</em> not accuracy, switch to the AUGRC metric, and pre-commit to reporting a null. Mostly related work and honesty, not new wins.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/22/reliable-feature-account/">What makes an out-of-distribution answer untrustworthy — and when interpretability can tell</a>
+      <span class="post-date">June 22, 2026</span>
+      <p class="post-excerpt">The synthesis: after four fleets (invent, attack, self-diagnose, prove) and a genuinely harder shift (tweets, poems, near-chance financial headlines), the account that survives is "trust a prediction to the degree transfer-stable features carry it." Confidence collapses under shift (proven rank-invariance + correlation +0.87 with accuracy); a single-probe reliable-evidence attribution beats it decisively (P=1.0) and most where the model is weakest — its edge doubles as accuracy falls. The mechanism is verified (the reliable sub-probe is a better OOD oracle, 0.72→0.82; wrong calls have reliable features objecting). And two of my own overclaims are corrected: density <em>does</em> work in an extrapolation regime (counterexample AUROC 0.81), and the mechanism is "better oracle," not "independent failure." Every number reproduced by me.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/22/does-it-already-know/">When a model is wrong, does it already know better? Recovering suppressed answers from transfer-stable features</a>
+      <span class="post-date">June 22, 2026</span>
+      <p class="post-excerpt">An eliciting-latent-knowledge result. When this sentiment model is wrong out-of-distribution, is the right answer still inside it, suppressed? Using the transfer-stable feature subspace as a latent-knowledge probe: across 897 OOD errors, the robust core recovers the correct answer <strong>61.5%</strong> of the time (CI 58–65%) vs 49% for random features — and ~69% on near-chance financial headlines. So most OOD errors are <em>readout corruption, not ignorance</em>: spurious topic features override genuine concept features, but the correct computation is still linearly decodable. The model already knew.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>Composition</h2>
+  <ul class="post-list">
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/23/the-driver-map/">The driver map: finding what a model thinks with — and catching the tool when it goes blind</a>
+      <span class="post-date">June 23, 2026</span>
+      <p class="post-excerpt">The engineering companion: which of a concept's thousands of features does the model actually <em>think with</em>? You can't read it off — you measure cause (steer/ablate). Mapping read-score vs cause-score over 9,037 Gemma features: correlation ≈ 0 — most readable features are thermometers, not drivers (replicating the project's first Pythia finding). And a live lesson in instrument-blindness: the cheap tool (attribution patching) caught 3 of 4 steering-confirmed drivers but <em>went blind on one</em> (a real driver buried at rank 1298) — exactly the LayerNorm/saturation false-negative predicted for a residual-stream SAE at mid-depth. To find what a model thinks with, measure causation — and check the causation tool against a real intervention.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/23/compositional-toolbox/">The model's compositional toolbox: averaging, amplifying, and a negation that won't cancel</a>
+      <span class="post-date">June 23, 2026</span>
+      <p class="post-excerpt">Does the model do <em>algebra</em> on concepts? Tested four composition operators on Gemma-2-2b sentiment: conjunction = clean <strong>averaging</strong> (judge(A and B) ≈ mean of parts); intensification = symmetric <strong>gain</strong> (extremely good/bad both amplify); negation = a reusable causal <strong>flip/driver</strong> (cos 0.92, steering flips judgments); double-negation = <strong>broken</strong> — "not not good" saturates and won't return to positive. No single law: a heterogeneous toolbox, some operators clean and roughly linear, one outright broken. The seductive "one asymmetry governs everything" hypothesis died under a clean test — the most useful thing that happened.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/23/compositional-but-not-a-direction/">Compositional but not a direction: when the model's reasoning lives in attention, not a vector</a>
+      <span class="post-date">June 23, 2026</span>
+      <p class="post-excerpt">The capstone — the operator type that breaks the "concepts are directions" paradigm. Comparison ("A better than B") genuinely binds the role (winner flips +2.31 when you flip better↔worse, entities frozen) — but it is <em>not a direction</em>: the role-vector built exactly like the negation driver has reusability cosine 0.02 (vs 0.92) and steering never flips the winner (0% at k=8). Predicted from first principles: a position-agnostic vector can't encode <em>which</em> entity wins, so the model must do it by attention. Completes the typology (negation/intensification/conjunction = directions; comparison = attention-routing) and marks a real limit of the probing-and-steering toolkit: relational reasoning lives in circuits, not vectors.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>Attribution patching</h2>
+  <ul class="post-list">
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/02/atp-degrades-with-depth/">Attribution patching breaks at depth: a layer-adaptive fix</a>
+      <span class="post-date">June 2, 2026</span>
+      <p class="post-excerpt">Attribution patching is the standard cheap approximation for SAE circuit discovery. On 180 (feature, head) pairs in Pythia-160M, its agreement with activation patching drops from Pearson 0.999 at the first downstream layer to 0.78 at the fifth. Integrated gradients (the Marks et al. 2024 default) is <em>worse</em> than AtP at early layers. A one-line layer-adaptive method recovers Pearson 0.99 with full AP at 23% of the compute — a 5× speedup.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/06/03/efficient-atp-star-softmax/">Efficient AtP*: 30× speedup for SAE circuit discovery</a>
+      <span class="post-date">June 3, 2026</span>
+      <p class="post-excerpt">Built the diagnostic to find <em>why</em> attribution patching fails at deep layers in Pythia-160M. The answer: attention softmax saturation, exclusively (GELU and LayerNorm aren't responsible). Then built the fix — closed-form softmax-aware AtP — which achieves Pearson 0.993 with full activation patching at 2 model passes per feature-position. Same cost as plain AtP, 5× lower error, 30× speedup over AP.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>Induction heads</h2>
+  <ul class="post-list">
+    <li class="post-item">
+      <a class="post-link" href="/2026/07/29/induction-beyond-the-famous-five/">Killing all five famous induction heads leaves most of GPT-2's induction standing</a>
+      <span class="post-date">July 29, 2026</span>
+      <p class="post-excerpt">GPT-2 small's five famous induction heads replicate cleanly (top scores 0.76–0.88) — and then the story breaks. A control ablation shows <strong>half of a single head's apparent effect is generic damage</strong> (+0.45 vs +0.20). Killing all five is superadditive (1.10 → 3.86 vs a naive 2.25) yet lands only a quarter of the way to the no-induction ceiling of 12.36: <strong>most induction survives</strong>. The survivors sort into three species — an <strong>independent</strong> same-layer spare untouched by the ablation (L5H0, 0.49 → 0.49 in every seed), a <strong>backup</strong> that doubles when the five die (L7H11 — 3× on the screening seed, an honest 2× after five), and <strong>dependent consumers</strong> downstream that die with them (L9H9, L10H1). One claimed backup (L8H1) failed the seed check and is reported dropped. Suggestive, not settled — but the famous five are not the circuit.</p>
+    </li>
+  </ul>
+</section>
