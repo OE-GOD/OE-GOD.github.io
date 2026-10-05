@@ -12,7 +12,7 @@ permalink: /archive/
 {% include honest-note.html %}
 
 <section>
-  <p>These posts are kept as published, corrections included; the only edit is a dated disclosure note on the SAE paper post. Deleting them would hide the mistakes, and the mistakes are part of the record. But I haven't yet checked that I can explain and defend each one on my own, so they are not on the front page. Some contain claims that are bigger than one experiment supports; read them as working notes, not results.</p>
+  <p>These posts are kept as published, corrections included. The only edits are a dated disclosure note on the SAE paper post and, on the April 2026 posts moved from my old site, dated correction notes plus the removal of the "solo, from scratch" claims from the ZK post. Deleting them would hide the mistakes, and the mistakes are part of the record. But I haven't yet checked that I can explain and defend each one on my own, so they are not on the front page. Some contain claims that are bigger than one experiment supports; read them as working notes, not results.</p>
 </section>
 
 <section>
@@ -173,6 +173,60 @@ permalink: /archive/
       <a class="post-link" href="/2026/07/29/induction-beyond-the-famous-five/">Killing all five famous induction heads leaves most of GPT-2's induction standing</a>
       <span class="post-date">July 29, 2026</span>
       <p class="post-excerpt">GPT-2 small's five famous induction heads replicate cleanly (top scores 0.76–0.88) — and then the story breaks. A control ablation shows <strong>half of a single head's apparent effect is generic damage</strong> (+0.45 vs +0.20). Killing all five is superadditive (1.10 → 3.86 vs a naive 2.25) yet lands only a quarter of the way to the no-induction ceiling of 12.36: <strong>most induction survives</strong>. The survivors sort into three species — an <strong>independent</strong> same-layer spare untouched by the ablation (L5H0, 0.49 → 0.49 in every seed), a <strong>backup</strong> that doubles when the five die (L7H11 — 3× on the screening seed, an honest 2× after five), and <strong>dependent consumers</strong> downstream that die with them (L9H9, L10H1). One claimed backup (L8H1) failed the seed check and is reported dropped. Suggestive, not settled — but the famous five are not the circuit.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>Before interpretability: Parameter Golf and a ZK project (April 2026)</h2>
+  <p>Eight posts from my old site, moved here in October 2026. When I moved them I checked their claims against the code and the public record, and many don't hold up. Each post now opens with a dated correction, and the ZK post's technical claims are retracted. The April text is kept below each note.</p>
+  <ul class="post-list">
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/zkml/">How I Built a Zero-Knowledge Proof System for AI Inference</a>
+      <span class="post-date">April 18, 2026 · retracted October 2026</span>
+      <p class="post-excerpt">A system for proving ML inference with GKR, Hyrax and Groth16. Checked against the code, its central claims fail: the model isn't private, the dispute mechanism doesn't check the right thing, and the verifiers skip a soundness check. The note at the top lists what fails.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/parameter-golf/">14 Experiments, 13 Failures</a>
+      <span class="post-date">April 18, 2026 · corrected October 2026</span>
+      <p class="post-excerpt">My attempts at OpenAI's Parameter Golf. Corrected: my compression PR was never merged, its baseline was zlib rather than LZMA, and others had tried entropy coding first.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/parameter-golf-technical/">The Math Behind Beating LZMA: ANS for Neural Network Weights</a>
+      <span class="post-date">April 18, 2026 · corrected October 2026</span>
+      <p class="post-excerpt">How rANS entropy coding works on quantized weights. Corrected: the "LZMA" baseline was actually zlib, and against the Brotli pipeline the top entry used, the gain was about 7%.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/sp8192-gdn/">Why SP8192 Doesn't Help GDN-Hybrid</a>
+      <span class="post-date">April 18, 2026 · corrected October 2026</span>
+      <p class="post-excerpt">The bigger tokenizer's embedding table pushed GDN-Hybrid over the 16 MB budget. Corrected: it failed on size, not on BPB.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/byte-counting-bug/">I Found a Bug That Inflated the Leaderboard by 14%</a>
+      <span class="post-date">April 18, 2026 · corrected October 2026</span>
+      <p class="post-excerpt">A byte-counting bug in GDN-Hybrid's evaluation. Corrected: others reported it first, it never reached the leaderboard, and its effect was about 15%.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/compliant-ttt/">Compliant TTT Is Worse Than No TTT</a>
+      <span class="post-date">April 18, 2026 · corrected October 2026</span>
+      <p class="post-excerpt">My score-first test-time training did worse than none. Corrected: the claim that leaderboard entries broke the rules is false; they used legal score-first TTT.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/gdn-database/">GDN Is Not a Sequence Model — It's a Differentiable Database</a>
+      <span class="post-date">April 18, 2026 · corrected October 2026</span>
+      <p class="post-excerpt">Reading GDN's state update as an associative memory, and testing whether state size is the bottleneck. Corrected: two numbers.</p>
+    </li>
+
+    <li class="post-item">
+      <a class="post-link" href="/2026/04/18/boring-parts/">The Boring Parts Have the Most Opportunity</a>
+      <span class="post-date">April 18, 2026 · corrected October 2026</span>
+      <p class="post-excerpt">An essay on where the wins came from. Corrected: the compression and byte-counting discoveries it lists were overstated.</p>
     </li>
   </ul>
 </section>
