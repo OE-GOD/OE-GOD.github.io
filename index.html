@@ -41,6 +41,12 @@ layout: home
       <p class="post-excerpt">Where does the read≠cause split live across a model's depth? For four concepts I measured the layer at which each becomes <em>readable</em> (decodable) vs <em>steerable</em> (intervening changes the output). The gap is large and consistent: every concept is perfectly readable at <strong>layer 0</strong> (it's in the words) but only steerable at <strong>layers 15–18</strong> (near where the model commits to an answer). Detection is lexical and immediate; control is deep and late — so decodability at a layer does <em>not</em> imply control there. Plus a sub-investigation locating "certainty" at ~layer 15 (weakly), and a tidy "abstraction = depth" prediction that the data refuted. Built with <a href="https://github.com/OE-GOD/featurescope">FeatureScope</a>.</p>
     </li>
 
+    <li class="post-item">
+      <a class="post-link" href="/2026/11/17/surface-cues-that-look-like-cheating/">Surface Cues That Look Like Cheating</a>
+      <span class="post-date">November 17, 2026</span>
+      <p class="post-excerpt">I built a cheat probe with a recent reward-hacking paper's recipe (a difference-of-means direction from synthetic cheat/honest pairs) on Qwen2.5-Coder-7B-Instruct and tried to fool it in six experiments. Mostly, when a surface pattern and cheating came apart, the score followed the surface pattern: the words "all pass", a mismatch between the action and the instruction, the type of edit, and (my best guess) whether a line was copied or rewritten. A <strong>lie direction</strong> was the one exception, and even it may read "the claim contradicts the output" rather than lying. Experiments 4–6 were pre-registered, and predictions that failed are printed next to the ones that held. One 7B model reading templated transcripts, so suggestive, not settled.</p>
+    </li>
+
   </ul>
   <p><a href="/archive/">→ Archive: older posts (SAE geometry, reliability, attribution patching, the Pythia SAE paper, and more)</a></p>
 </section>
